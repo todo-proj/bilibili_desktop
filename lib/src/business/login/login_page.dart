@@ -123,7 +123,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               backgroundColor: Colors.white,
                               radius: 25,
                               child: Icon(
-                                AppIcons.right,
+                                AppIcons.select,
                                 color: Colors.blue,
                                 size: 30,
                               ),

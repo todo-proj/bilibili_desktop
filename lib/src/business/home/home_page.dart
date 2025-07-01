@@ -1,3 +1,4 @@
+import 'package:bilibili_desktop/src/business/common/system_titlebar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,22 +13,34 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Align(
-          alignment: Alignment.topLeft,
-          child: GestureDetector(
-            onTap: (){
-              context.go('/login');
-            },
-              child: Text('data')),
-        ),
+      body: Row(
+        children: [
+          Container(
+              width: 200,
+              color: Colors.red,
+              child: Column(
+                children: [
+                  IconButton(icon: Icon(Icons.telegram), onPressed: (){
+                    context.go('/login');
+                  })
+                ],
+              )),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                SystemTitleBar(),
+
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

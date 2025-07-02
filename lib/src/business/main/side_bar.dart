@@ -1,3 +1,5 @@
+import 'package:bilibili_desktop/src/router/main_route.dart';
+import 'package:bilibili_desktop/src/router/root_route.dart';
 import 'package:bilibili_desktop/src/utils/widget_util.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -17,19 +19,21 @@ class SideBar extends StatelessWidget {
           TextButton(child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.home),
+              Icon(Icons.home, size: 30,),
               Text("Home"),
             ],
           ),onPressed: (){
-            context.go('/home/user');
+            context.go(MainRoute.home);
           },),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              context.push(MainRoute.directMessage);
+            },
             icon: Icon(Icons.email_outlined),
           ),
           IconButton(
             onPressed: () {
-              context.go('/home/settings');
+              context.go(MainRoute.settings);
             },
             icon: Icon(Icons.settings),
           ),
@@ -39,3 +43,5 @@ class SideBar extends StatelessWidget {
     );
   }
 }
+
+// 我调用 context.go('/main/user');却重定向到了 /main，中文回答下

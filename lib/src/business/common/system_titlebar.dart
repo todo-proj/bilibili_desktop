@@ -20,13 +20,13 @@ class _SystemTitleBarState extends State<SystemTitleBar> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          IconButton(
+          _buildSystemTitleBarItem(
             onPressed: () {
               windowManager.minimize();
             },
             icon: const Icon(AppIcons.minimize),
           ),
-          IconButton(
+          _buildSystemTitleBarItem(
             onPressed: () async {
               _isMaximized = await windowManager.isMaximized();
               if (_isMaximized) {
@@ -40,13 +40,21 @@ class _SystemTitleBarState extends State<SystemTitleBar> {
             },
             icon: _isMaximized ? const Icon(AppIcons.unMaximize) : const Icon(AppIcons.maximize),
           ),
-          IconButton(
+          _buildSystemTitleBarItem(
             onPressed: () {
               windowManager.close();
             },
             icon: const Icon(AppIcons.shutDown),
           )
         ]
+    );
+  }
+
+  Widget _buildSystemTitleBarItem({required Icon icon, required VoidCallback onPressed}) {
+    return IconButton(
+      onPressed: onPressed,
+      icon: icon,
+      style: IconButton.styleFrom(foregroundColor: Colors.black),
     );
   }
 }

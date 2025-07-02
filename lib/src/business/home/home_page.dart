@@ -1,9 +1,13 @@
 import 'package:bilibili_desktop/src/business/common/system_titlebar.dart';
+import 'package:bilibili_desktop/src/business/home/side_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../common/window_control_area.dart';
+
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final Widget child;
+  const HomePage({super.key, required this.child});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -21,22 +25,16 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Row(
         children: [
-          Container(
-              width: 200,
-              color: Colors.red,
-              child: Column(
-                children: [
-                  IconButton(icon: Icon(Icons.telegram), onPressed: (){
-                    context.go('/login');
-                  })
-                ],
-              )),
+          SideBar(),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                SystemTitleBar(),
-
+                Container(
+                  width: double.infinity,
+                    color: Colors.blue,
+                    child: DoubleTapMaximizeArea(child: SystemTitleBar())),
+                Expanded(child: widget.child)
               ],
             ),
           ),

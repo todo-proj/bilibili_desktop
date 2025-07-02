@@ -34,6 +34,32 @@ class App extends StatelessWidget {
       title: 'BiliBili野生客户端',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        iconButtonTheme: IconButtonThemeData(
+          style: IconButton.styleFrom(foregroundColor: Colors.black).copyWith(
+            foregroundColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.hovered)) {
+                return Colors.blue;
+              }else {
+                return Colors.black;
+              }
+            }),
+            backgroundColor: WidgetStateProperty.all(Colors.transparent),
+            overlayColor: WidgetStateProperty.all(Colors.transparent),
+          ),
+        ),
+        textButtonTheme: TextButtonThemeData(
+            style: ButtonStyle(
+              foregroundColor: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.hovered)) {
+                  return Colors.blue;
+                }else {
+                  return Colors.black;
+                }
+              }),
+              backgroundColor: WidgetStateProperty.all(Colors.transparent),
+              overlayColor: WidgetStateProperty.all(Colors.transparent),
+            )
+        )
       ),
       routerConfig: appRouter,
     );

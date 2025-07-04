@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:bilibili_desktop/src/http/model/login_qr_code_model.dart';
+import 'package:bilibili_desktop/src/business/common/view_state/view_state.dart';
 import 'package:bilibili_desktop/src/providers/api_provider.dart';
 import 'package:equatable/equatable.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../common/view_state/view_state.dart';
 
 part 'login_view_model.g.dart';
 

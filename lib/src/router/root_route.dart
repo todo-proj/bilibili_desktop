@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'main_route.dart';
 
 class RootRoute {
-  static const splash = '/splash';
+  static const splash = '/';
   static const login = '/login';
 }
 

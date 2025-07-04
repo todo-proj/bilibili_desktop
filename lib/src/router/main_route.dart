@@ -9,13 +9,16 @@ import 'package:go_router/go_router.dart';
 import '../business/message/direct_message_page.dart';
 import '../business/setting/setting_page.dart';
 
-
 class MainRoute {
-  static final String main = '/main';
-  static final String home = '/main/home';
-  static final String settings = '/main/settings';
-  static final String user = '/main/user';
-  static final String directMessage = '/main/message';
+  static const String main = '/main';
+  static const String home = '/main/home';
+  static const String settings = '/main/settings';
+  static const String user = '/main/user';
+  static const String zone = '/main/zone'; //个人空间
+  static const String directMessage = '/main/message';
+  static const String featured = '/main/featured';
+  static const String following = '/main/following';
+  static const String theme = '/main/theme';
 }
 
 // Main Shell Route
@@ -25,33 +28,39 @@ final RouteBase mainRoute = ShellRoute(
     // 这个 child 是 ShellRoute.routes 中匹配到的页面
     return MainPage(child: child);
   },
+  pageBuilder: (context, state, child) {
+    return CustomTransitionPage(
+      child: MainPage(child: child),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(opacity: animation, child: child);
+      },
+    );
+  },
   routes: [
     // 当访问 /main (或者 /main/ 被重定向) 时，会默认重定向到 /main/home
     GoRoute(
       path: MainRoute.main,
       redirect: (_, state) {
         return MainRoute.home;
-      },),
+      },
+    ),
     GoRoute(
       path: MainRoute.home,
       name: 'home',
-      builder: (BuildContext context, GoRouterState state) {
-        return const HomePage();
-      },
+      pageBuilder: (context, state) =>
+          _buildPageWithTransition(HomePage(key: state.pageKey), state),
     ),
     GoRoute(
       path: MainRoute.settings,
       name: 'settings',
-      builder: (BuildContext context, GoRouterState state) {
-        return const SettingPage();
-      },
+      pageBuilder: (context, state) =>
+          _buildPageWithTransition(SettingPage(key: state.pageKey), state),
     ),
     GoRoute(
       path: MainRoute.user,
       name: 'user',
-      builder: (BuildContext context, GoRouterState state) {
-        return const UserPage();
-      },
+      pageBuilder: (context, state) =>
+          _buildPageWithTransition(UserPage(key: state.pageKey), state),
     ),
     GoRoute(
       path: MainRoute.directMessage,
@@ -59,9 +68,45 @@ final RouteBase mainRoute = ShellRoute(
         return RootRoute.login;
       },
       name: 'message',
-      builder: (BuildContext context, GoRouterState state) {
-        return const DirectMessagePage();
-      },
+      pageBuilder: (context, state) => _buildPageWithTransition(
+        DirectMessagePage(key: state.pageKey),
+        state,
+      ),
+    ),
+    GoRoute(
+      path: MainRoute.zone,
+      name: 'zone',
+      pageBuilder: (context, state) => _buildPageWithTransition(
+        DirectMessagePage(key: state.pageKey),
+        state,
+      ),
+    ),
+    GoRoute(
+      path: MainRoute.featured,
+      name: 'featured',
+      pageBuilder: (context, state) => _buildPageWithTransition(
+        DirectMessagePage(key: state.pageKey),
+        state,
+      ),
+    ),
+    GoRoute(
+      path: MainRoute.following,
+      name: 'following',
+      pageBuilder: (context, state) => _buildPageWithTransition(
+        DirectMessagePage(key: state.pageKey),
+        state,
+      ),
     ),
   ],
 );
+
+// 统一的转场动画构建函数
+Page _buildPageWithTransition(Widget child, GoRouterState state) {
+  return CustomTransitionPage(
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(opacity: animation, child: child);
+    },
+  );
+}

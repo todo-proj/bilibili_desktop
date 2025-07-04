@@ -3,4 +3,5 @@ class ErrorCode {
   static const int networkError = -2;
   static const int unauthorized = -5;
   static const int requestCancelled = -6;
+  static const int notLogin = -101;
 }

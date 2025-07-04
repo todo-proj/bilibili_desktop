@@ -1,3 +1,4 @@
+import 'package:bilibili_desktop/src/http/model/user_info_model.dart' show UserInfoModel;
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'api_response.dart';
@@ -23,6 +24,13 @@ abstract class ApiService {
   Future<ApiResponse<dynamic>> checkCode(
     @Query("qrcode_key") String qrcodeKey,
   );
+
+
+  @GET("x/member/web/account")
+  Future<ApiResponse<AccountModel>> getAccount();
+
+  @GET("x/member/web/account")
+  Future<ApiResponse<UserInfoModel>> getUserAccountInformation();
 
 
   @GET("x/web-interface/index/top/rcmd")

@@ -39,9 +39,6 @@ abstract class ApiService {
     @Query("fresh_type") int freshType = 3,
   });
 
-  @GET("x/member/web/account")
-  Future<ApiResponse<AccountModel>> getAccountInfo();
-
   @GET("x/web-interface/view")
   Future<ApiResponse<VideoInfoModel>> videoInfo(@Query("bvid") String bvid);
 

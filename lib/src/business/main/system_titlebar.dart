@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'app_icons.dart';
+import '../common/app_icons.dart';
 
 class SystemTitleBar extends StatefulWidget {
   const SystemTitleBar({super.key});

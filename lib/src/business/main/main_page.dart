@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../common/system_titlebar.dart';
+import 'system_titlebar.dart';
 import '../common/window_control_area.dart';
 import 'side_bar.dart';
 

@@ -2,14 +2,13 @@ import 'package:bilibili_desktop/src/http/error_code.dart';
 import 'package:curl_logger_dio_interceptor/curl_logger_dio_interceptor.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:logger/logger.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
+import 'package:bilibili_desktop/src/utils/logger.dart' show logger;
 import 'interceptors/retry_interceptor.dart';
 import 'network_config.dart';
 import 'network_exception.dart';
 
-final Logger _logger = Logger();
 
 class NetworkManager {
   static NetworkManager? _instance;
@@ -49,53 +48,6 @@ class NetworkManager {
   }
 
   void _setupInterceptors() {
-    // 请求拦截器
-    // _dio.interceptors.add(
-    //   InterceptorsWrapper(
-    //     onRequest: (options, handler) {
-    //       // 添加 token
-    //       if (_token != null) {
-    //         options.headers['Authorization'] = 'Bearer $_token';
-    //       }
-    //
-    //       // 添加时间戳
-    //       options.headers['timestamp'] = DateTime.now().millisecondsSinceEpoch;
-    //
-    //       handler.next(options);
-    //     },
-    //     onResponse: (response, handler) {
-    //       // 统一处理响应
-    //       if (response.data is Map<String, dynamic>) {
-    //         final apiResponse = response.data as Map<String, dynamic>;
-    //         if (apiResponse['code'] != 200) {
-    //           handler.reject(
-    //             DioException(
-    //               requestOptions: response.requestOptions,
-    //               error: NetworkException(
-    //                 apiResponse['message'] ?? '请求失败',
-    //                 code: apiResponse['code'],
-    //               ),
-    //             ),
-    //           );
-    //           return;
-    //         }
-    //       }
-    //       handler.next(response);
-    //     },
-    //     onError: (error, handler) {
-    //       _logger.e("dio error", error: error);
-    //       // 统一错误处理
-    //       final networkException = _handleError(error);
-    //       handler.reject(
-    //         DioException(
-    //           requestOptions: error.requestOptions,
-    //           error: networkException,
-    //         ),
-    //       );
-    //     },
-    //   ),
-    // );
-
     // 日志拦截器（仅在 Debug 模式下）
     if (kDebugMode) {
       _dio.interceptors.add(CurlLoggerDioInterceptor());
@@ -111,6 +63,52 @@ class NetworkManager {
         ),
       );
     }
+    // 请求拦截器
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          // 添加 token
+          if (_token != null) {
+            options.headers['Authorization'] = 'Bearer $_token';
+          }
+
+          // 添加时间戳
+          options.headers['timestamp'] = DateTime.now().millisecondsSinceEpoch;
+
+          handler.next(options);
+        },
+        onResponse: (response, handler) {
+          // 统一处理响应
+          if (response.data is Map<String, dynamic>) {
+            final apiResponse = response.data as Map<String, dynamic>;
+            if (apiResponse['code'] != 200) {
+              handler.reject(
+                DioException(
+                  requestOptions: response.requestOptions,
+                  error: NetworkException(
+                    apiResponse['message'] ?? '请求失败',
+                    code: apiResponse['code'],
+                  ),
+                ),
+              );
+              return;
+            }
+          }
+          handler.next(response);
+        },
+        onError: (error, handler) {
+          logger.e("dio error", error: error.type);
+          // 统一错误处理
+          final networkException = _handleError(error);
+          handler.reject(
+            DioException(
+              requestOptions: error.requestOptions,
+              error: networkException,
+            ),
+          );
+        },
+      ),
+    );
 
     // 重试拦截器
     _dio.interceptors.add(RetryInterceptor());

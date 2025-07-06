@@ -54,6 +54,9 @@ class LoginViewModel extends _$LoginViewModel {
         final data = await api.checkCode(state.data?.qrcodeKey ?? '').handle();
         final code = data['code'];
         if (code == 0) {
+
+
+
           timer.cancel();
           //success
         }else if (code == 86038) {

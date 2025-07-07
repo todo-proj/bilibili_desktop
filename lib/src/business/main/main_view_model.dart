@@ -53,23 +53,39 @@ class MainViewModel extends _$MainViewModel {
   void search(String content) {
 
   }
+
+  void toggleSearchPanel() {
+    state = state.copyWith(showSearchPanel: !state.showSearchPanel);
+  }
+
+  void hideSearchPanel() {
+    state = state.copyWith(showSearchPanel: false);
+  }
+
+  void showSearchPanel() {
+    state = state.copyWith(showSearchPanel: true);
+  }
 }
 
 class MainPageState extends Equatable{
   final List<SideBarItem> sideBarItems;
+  final bool showSearchPanel;
   const MainPageState({
     required this.sideBarItems,
+    this.showSearchPanel = false,
   });
 
   copyWith({
     List<SideBarItem>? sideBarItems,
+    bool? showSearchPanel,
   })
   {
     return MainPageState(
       sideBarItems: sideBarItems ?? this.sideBarItems,
+      showSearchPanel: showSearchPanel ?? this.showSearchPanel,
     );
   }
   @override
-  List<Object?> get props => [sideBarItems];
+  List<Object?> get props => [sideBarItems, showSearchPanel];
 }
 

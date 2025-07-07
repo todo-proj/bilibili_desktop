@@ -1,53 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// mixin EventDispatcherMixin on AutoDisposeNotifier {
-//   final Map<Type, StreamController> _controllers = {};
-//   bool _isInitialized = false;
-//
-//   void _ensureInitialized() {
-//     if (!_isInitialized) {
-//       ref.onDispose(() {
-//         _cleanup();
-//       });
-//       _isInitialized = true;
-//     }
-//   }
-//
-//   void _cleanup() {
-//     for (final controller in _controllers.values) {
-//       controller.close();
-//     }
-//     _controllers.clear();
-//     _isInitialized = false;
-//   }
-//
-//   Stream<T> getStream<T>() {
-//     _ensureInitialized();
-//     final controller = _controllers[T] as StreamController<T>?;
-//     if (controller != null) {
-//       return controller.stream;
-//     }
-//
-//     final newController = StreamController<T>.broadcast();
-//     _controllers[T] = newController;
-//     return newController.stream;
-//   }
-//
-//   void emitToStream<T>(T value) {
-//     _ensureInitialized();
-//     final controller = _controllers[T] as StreamController<T>?;
-//     if (controller != null && !controller.isClosed) {
-//       controller.add(value);
-//     } else {
-//       // 如果流不存在，创建新的
-//       final newController = StreamController<T>.broadcast();
-//       _controllers[T] = newController;
-//       newController.add(value);
-//     }
-//   }
-// }
-
 extension EventDispatcherNotifierExtension on Notifier {
   static final Map<Notifier, _InternalEventDispatcher> _dispatchers = {};
 

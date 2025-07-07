@@ -4,11 +4,11 @@
 
 import 'dart:convert';
 
-UserInfoModel userInfoModelFromJson(String str) => UserInfoModel.fromJson(json.decode(str));
+BasicUserInfoModel userInfoModelFromJson(String str) => BasicUserInfoModel.fromJson(json.decode(str));
 
-String userInfoModelToJson(UserInfoModel data) => json.encode(data.toJson());
+String userInfoModelToJson(BasicUserInfoModel data) => json.encode(data.toJson());
 
-class UserInfoModel {
+class BasicUserInfoModel {
   final bool isLogin;
   final int emailVerified;
   final String face;
@@ -42,7 +42,7 @@ class UserInfoModel {
   final WbiImg wbiImg;
   final bool isJury;
 
-  UserInfoModel({
+  BasicUserInfoModel({
     required this.isLogin,
     required this.emailVerified,
     required this.face,
@@ -77,7 +77,7 @@ class UserInfoModel {
     required this.isJury,
   });
 
-  factory UserInfoModel.fromJson(Map<String, dynamic> json) => UserInfoModel(
+  factory BasicUserInfoModel.fromJson(Map<String, dynamic> json) => BasicUserInfoModel(
     isLogin: json["isLogin"],
     emailVerified: json["email_verified"],
     face: json["face"],
@@ -105,7 +105,7 @@ class UserInfoModel {
     wallet: Wallet.fromJson(json["wallet"]),
     hasShop: json["has_shop"],
     shopUrl: json["shop_url"],
-    allowanceCount: json["allowance_count"],
+    allowanceCount: json["allowance_count"] ?? 0,
     answerStatus: json["answer_status"],
     isSeniorMember: json["is_senior_member"],
     wbiImg: WbiImg.fromJson(json["wbi_img"]),
@@ -152,7 +152,7 @@ class LevelInfo {
   final int currentLevel;
   final int currentMin;
   final int currentExp;
-  final String nextExp;
+  final int nextExp;
 
   LevelInfo({
     required this.currentLevel,

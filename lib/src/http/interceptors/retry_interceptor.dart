@@ -25,7 +25,8 @@ class RetryInterceptor extends Interceptor {
       await Future.delayed(retryDelay * (retryCount + 1));
 
       try {
-        final response = await NetworkManager.instance.dio.fetch(err.requestOptions);
+        final dio = (await NetworkManager.instance).dio;
+        final response = await dio.fetch(err.requestOptions);
         handler.resolve(response);
       } catch (e) {
         super.onError(err, handler);

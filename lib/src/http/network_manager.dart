@@ -1,6 +1,8 @@
 import 'package:bilibili_desktop/src/http/error_code.dart';
+import 'package:bilibili_desktop/src/providers/api_provider.dart';
 import 'package:curl_logger_dio_interceptor/curl_logger_dio_interceptor.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -9,25 +11,27 @@ import 'interceptors/retry_interceptor.dart';
 import 'network_config.dart';
 import 'network_exception.dart';
 
-
 class NetworkManager {
   static NetworkManager? _instance;
   late Dio _dio;
-  String? _token;
 
-  static NetworkManager get instance {
-    _instance ??= NetworkManager._internal();
+  static Future<NetworkManager> get instance async {
+    _instance ??= await NetworkManager._internal();
     return _instance!;
   }
 
-  NetworkManager._internal() {
-    _dio = Dio();
-    _setupDio();
+  static Future<NetworkManager> _internal() async {
+    final dio = Dio();
+    final manager = NetworkManager._create(dio);
+    await manager._setupDioAsync(); // 异步配置
+    return manager;
   }
+
+  NetworkManager._create(this._dio);
 
   Dio get dio => _dio;
 
-  void _setupDio() {
+  Future<void> _setupDioAsync() async {
     // 基础配置
     _dio.options = BaseOptions(
       baseUrl: NetworkConfig.baseUrl,
@@ -36,18 +40,23 @@ class NetworkManager {
       sendTimeout: Duration(milliseconds: NetworkConfig.sendTimeout),
       headers: {
         "Referer": "https://www.bilibili.com/",
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
+        "User-Agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
         "Origin": "https://www.bilibili.com/",
         "Accept": "*/*",
-        "Accept-Language":"zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
+        "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
       },
     );
 
+    final cookieManager = CookieManager(await prepareJar());
     // 添加拦截器
-    _setupInterceptors();
+    _setupInterceptors([cookieManager]);
   }
 
-  void _setupInterceptors() {
+  void _setupInterceptors(List<Interceptor> interceptors) {
+    for (var interceptor in interceptors) {
+      _dio.interceptors.add(interceptor);
+    }
     // 日志拦截器（仅在 Debug 模式下）
     if (kDebugMode) {
       _dio.interceptors.add(CurlLoggerDioInterceptor());
@@ -67,33 +76,11 @@ class NetworkManager {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          // 添加 token
-          if (_token != null) {
-            options.headers['Authorization'] = 'Bearer $_token';
-          }
-
           // 添加时间戳
           options.headers['timestamp'] = DateTime.now().millisecondsSinceEpoch;
-
           handler.next(options);
         },
         onResponse: (response, handler) {
-          // 统一处理响应
-          if (response.data is Map<String, dynamic>) {
-            final apiResponse = response.data as Map<String, dynamic>;
-            if (apiResponse['code'] != 200) {
-              handler.reject(
-                DioException(
-                  requestOptions: response.requestOptions,
-                  error: NetworkException(
-                    apiResponse['message'] ?? '请求失败',
-                    code: apiResponse['code'],
-                  ),
-                ),
-              );
-              return;
-            }
-          }
           handler.next(response);
         },
         onError: (error, handler) {
@@ -149,16 +136,6 @@ class NetworkManager {
       default:
         return NetworkException('HTTP错误: $statusCode', code: ErrorCode.networkError);
     }
-  }
-
-  // 设置 Token
-  void setToken(String token) {
-    _token = token;
-  }
-
-  // 清除 Token
-  void clearToken() {
-    _token = null;
   }
 
   // 更新 BaseUrl

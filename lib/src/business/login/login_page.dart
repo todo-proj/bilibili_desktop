@@ -26,6 +26,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(loginViewModelProvider.select((v)=>v.data?.loginSuccess), (prev, next) {
+      if (next == true) {
+        context.pop();
+      }
+    });
     final state = ref.watch(loginViewModelProvider);
     final codeExpired = ref.watch(
       loginViewModelProvider.select((value) => value.data?.isExpired ?? false),

@@ -1,15 +1,17 @@
+import 'dart:io';
+
+import 'package:bilibili_desktop/src/business/login/login_state_tool.dart';
 import 'package:bilibili_desktop/src/business/main/main_view_model.dart';
 import 'package:bilibili_desktop/src/business/main/side_bar_item.dart';
+import 'package:bilibili_desktop/src/providers/router/main_route.dart';
+import 'package:bilibili_desktop/src/providers/router/root_route.dart';
 import 'package:bilibili_desktop/src/providers/theme/themes_provider.dart';
-import 'package:bilibili_desktop/src/router/main_route.dart';
 import 'package:bilibili_desktop/src/utils/widget_util.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-
 
 class SideBar extends ConsumerStatefulWidget {
   const SideBar({super.key});
@@ -24,7 +26,9 @@ class _SideBarState extends ConsumerState<SideBar> {
   @override
   Widget build(BuildContext context) {
     debugPaintSizeEnabled = false;
-    final items = ref.watch(mainViewModelProvider.select((v)=> v.sideBarItems));
+    final items = ref.watch(
+      mainViewModelProvider.select((v) => v.sideBarItems),
+    );
 
     return Container(
       width: 80,
@@ -32,7 +36,7 @@ class _SideBarState extends ConsumerState<SideBar> {
       child: Column(
         spacing: 10,
         children: [
-          50.hSize,
+          Platform.isMacOS ? 50.hSize : 30.hSize,
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
@@ -54,33 +58,27 @@ class _SideBarState extends ConsumerState<SideBar> {
   Widget _buildItem(SideBarItem item) {
     final isSelected = item.tag == _currentTag && item.maintainState;
     if (item.tag == MainRoute.zone) {
-      return GestureDetector(
-        child: _buildItemZone(item),
-        onTap: () {
+      return IconButton(
+        isSelected: isSelected,
+        onPressed: () {
           _onTap(item);
         },
-      );
-    }
-
-    if (item.child != null) {
-      return GestureDetector(
-        child: item.child,
-        onTap: () {
-          _onTap(item);
-        },
+        icon: _buildItemZone(item),
       );
     }
     if (item.icon != null && item.title != null) {
       return SizedBox(
         height: 60,
         child: TextButton(
-          statesController: WidgetStatesController(isSelected ? {WidgetState.selected} : {}),
+          statesController: WidgetStatesController(
+            isSelected ? {WidgetState.selected} : {},
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(item.icon, size: 30,),
+              Icon(item.icon, size: 30),
               3.hSize,
-              Text(item.title!, style: TextStyle(fontSize: 12, )),
+              Text(item.title!, style: TextStyle(fontSize: 12)),
             ],
           ),
           onPressed: () {
@@ -89,7 +87,7 @@ class _SideBarState extends ConsumerState<SideBar> {
         ),
       );
     }
-    if (item.icon != null ) {
+    if (item.icon != null) {
       return IconButton(
         isSelected: isSelected,
         onPressed: () {
@@ -102,7 +100,15 @@ class _SideBarState extends ConsumerState<SideBar> {
   }
 
   Widget _buildItemZone(SideBarItem item) {
-    final defaultAvatar = Image.asset('assets/images/icon_default_avatar.png', width: 20, color: Colors.grey,);
+    final defaultAvatar = CircleAvatar(
+      radius: 20,
+      backgroundColor: Colors.grey.shade200,
+      child: Image.asset(
+        'assets/images/icon_default_avatar.png',
+        width: IconTheme.of(context).size,
+        color: Colors.grey,
+      ),
+    );
     if (item.object == null) {
       return defaultAvatar;
     }
@@ -111,27 +117,35 @@ class _SideBarState extends ConsumerState<SideBar> {
     if (!isLogin) {
       return defaultAvatar;
     }
-    return CachedNetworkImage(
-      imageUrl: avatar,
-      placeholder: (context, url) => CircularProgressIndicator(),
-      errorWidget: (context, url, error) => defaultAvatar,
+    return ClipOval(
+      child: CachedNetworkImage(
+        imageUrl: avatar,
+        width: 40,
+        placeholder: (context, url) => CircularProgressIndicator(),
+        errorWidget: (context, url, error) => defaultAvatar,
+      ),
     );
   }
 
-
   void _onTap(SideBarItem item) {
     if (item.tag == _currentTag) return;
-    switch(item.tag) {
+    switch (item.tag) {
       case MainRoute.home:
-      case MainRoute.zone:
-      case MainRoute.featured:
-      case MainRoute.following:
       case MainRoute.settings:
         context.go(item.tag);
         break;
       case MainRoute.theme:
         ref.read(themesProvider.notifier).toggleTheme();
         ref.read(mainViewModelProvider.notifier).refreshSideBar();
+        break;
+      case MainRoute.zone:
+      case MainRoute.featured:
+      case MainRoute.following:
+        if (checkLogin(ref)) {
+          context.go(item.tag);
+        }else {
+          context.push(RootRoute.login);
+        }
         break;
     }
     setState(() {

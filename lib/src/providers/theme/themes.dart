@@ -69,7 +69,7 @@ class Themes {
       iconButtonTheme: IconButtonThemeData(
         style: IconButton.styleFrom(foregroundColor: Colors.white).copyWith(
           foregroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.hovered)) {
+            if (states.contains(WidgetState.hovered) || states.contains(WidgetState.selected)) {
               return Colors.blue;
             }else {
               return Colors.white;
@@ -82,7 +82,7 @@ class Themes {
       textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
             foregroundColor: WidgetStateProperty.resolveWith((states) {
-              if (states.contains(WidgetState.hovered)) {
+              if (states.contains(WidgetState.hovered) || states.contains(WidgetState.selected)) {
                 return Colors.blue;
               }else {
                 return Colors.white;

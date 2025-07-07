@@ -1,5 +1,5 @@
+import 'package:bilibili_desktop/src/providers/router/root_route.dart';
 import 'package:bilibili_desktop/src/providers/theme/themes_provider.dart';
-import 'package:bilibili_desktop/src/router/root_route.dart';
 import 'package:bilibili_desktop/src/utils/app_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,7 +42,7 @@ class App extends ConsumerWidget {
       theme: Themes.lightTheme,
       darkTheme: Themes.darkTheme,
       themeMode: themeModeState.mode,
-      routerConfig: appRouter,
+      routerConfig: ref.read(appRouterProvider),
     );
   }
 }

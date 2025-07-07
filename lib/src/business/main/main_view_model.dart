@@ -1,7 +1,7 @@
 import 'package:bilibili_desktop/src/business/main/side_bar_item.dart';
 import 'package:bilibili_desktop/src/business/user/user_center.dart';
+import 'package:bilibili_desktop/src/providers/router/main_route.dart';
 import 'package:bilibili_desktop/src/providers/theme/themes_provider.dart';
-import 'package:bilibili_desktop/src/router/main_route.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -25,11 +25,14 @@ class MainViewModel extends _$MainViewModel {
       SideBarItem(tag: 'empty'),
     ];
     final userState = ref.read(userCenterProviderProvider);
-    if (userState == null) {
-      SideBarItem(tag: MainRoute.zone, child: Image.asset('assets/images/icon_default_avatar.png', width: 20, color: Colors.grey,));
-    }else {
-
+    dynamic zoneObject;
+    if (userState != null) {
+      zoneObject = {
+        'isLogin': userState.isLogin,
+        'avatar': userState.face,
+      };
     }
+    sideBarItems.add(SideBarItem(tag: MainRoute.zone, object: zoneObject, maintainState: false));
     sideBarItems.add(SideBarItem(icon: Icons.email_outlined, tag: MainRoute.directMessage, maintainState: false));
     //夜间模式
     final themeState = ref.read(themesProvider);
@@ -67,3 +70,4 @@ class MainPageState extends Equatable{
   @override
   List<Object?> get props => [sideBarItems];
 }
+

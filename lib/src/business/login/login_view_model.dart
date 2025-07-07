@@ -1,9 +1,13 @@
 import 'dart:async';
 
+import 'package:bilibili_desktop/src/business/common/event_dispatcher_mixin.dart';
 import 'package:bilibili_desktop/src/business/common/view_state/view_state.dart';
+import 'package:bilibili_desktop/src/business/user/user_center.dart';
 import 'package:bilibili_desktop/src/providers/api_provider.dart';
 import 'package:equatable/equatable.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../utils/logger.dart' show logger;
 
 part 'login_view_model.g.dart';
 
@@ -55,8 +59,6 @@ class LoginViewModel extends _$LoginViewModel {
         final code = data['code'];
         if (code == 0) {
 
-
-
           timer.cancel();
           //success
         }else if (code == 86038) {
@@ -82,12 +84,14 @@ class LoginState extends Equatable {
   final String qrcodeKey;
   final bool isExpired;
   final bool waitingConfirm;
+  final bool loginSuccess;
 
   const LoginState({
     required this.qrcode,
     required this.qrcodeKey,
     this.isExpired = false,
     this.waitingConfirm = false,
+    this.loginSuccess = false,
   });
 
   copyWith({
@@ -95,17 +99,19 @@ class LoginState extends Equatable {
     String? qrcodeKey,
     bool? isExpired,
     bool? waitingConfirm,
+    bool? loginSuccess,
   }) {
     return LoginState(
       qrcode: qrcode ?? this.qrcode,
       qrcodeKey: qrcodeKey ?? this.qrcodeKey,
       isExpired: isExpired ?? this.isExpired,
       waitingConfirm: waitingConfirm ?? this.waitingConfirm,
+      loginSuccess: loginSuccess ?? this.loginSuccess,
     );
   }
 
   @override
-  List<Object?> get props => [qrcode, qrcodeKey, isExpired, waitingConfirm];
+  List<Object?> get props => [qrcode, qrcodeKey, isExpired, waitingConfirm, loginSuccess];
 
 
 }

@@ -6,7 +6,7 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-import 'package:bilibili_desktop/src/utils/logger.dart' show logger;
+import 'package:bilibili_desktop/src/utils/logger.dart' show logger, L;
 import 'interceptors/retry_interceptor.dart';
 import 'network_config.dart';
 import 'network_exception.dart';
@@ -84,7 +84,7 @@ class NetworkManager {
           handler.next(response);
         },
         onError: (error, handler) {
-          logger.e("dio error", error: error.type);
+          L.e("dio error", error: error);
           // 统一错误处理
           final networkException = _handleError(error);
           handler.reject(

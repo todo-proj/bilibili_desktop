@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:bilibili_desktop/src/business/main/title_search_panel.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'system_titlebar.dart';
 import '../common/window_control_area.dart';
@@ -38,28 +40,29 @@ class _MainPageState extends State<MainPage> {
                   child: DoubleTapMaximizeArea(
                     child: Row(
                       children: [
-                        Image.asset(
-                          'assets/images/bilibili_logo.png',
-                          width: 80,
-                          color: Colors.pinkAccent,
+                        GestureDetector(
+                          onTap: (){
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TitleSearchPanelTest()));
+                          },
+                          child: Image.asset(
+                            'assets/images/bilibili_logo.png',
+                            width: 80,
+                            color: Colors.pinkAccent,
+                          ),
                         ),
+                        const Spacer(),
+                        Expanded(child: Stack(
+                          children: [
+                            TitleSearchPanel()
+                          ],
+                        )),
                         Platform.isMacOS ? const SizedBox() : SystemTitleBar(),
                       ],
                     ),
                   ),
                 ),
                 Expanded(
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    transitionBuilder:
-                        (Widget child, Animation<double> animation) {
-                          return FadeTransition(
-                            opacity: animation,
-                            child: child,
-                          );
-                        },
-                    child: widget.child,
-                  ),
+                  child: widget.child,
                 ),
               ],
             ),

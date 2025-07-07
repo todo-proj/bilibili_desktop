@@ -4,7 +4,7 @@ import 'package:bilibili_desktop/src/providers/api_provider.dart';
 import 'package:equatable/equatable.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../utils/logger.dart' show logger;
+import '../utils/logger.dart' show logger, L;
 
 part 'splash_view_model.g.dart';
 
@@ -27,7 +27,7 @@ class SplashViewModel extends _$SplashViewModel {
         }
       }
     }catch(e, s) {
-      logger.e(s);
+      L.e(s);
     }
     state = state.copyWith(checkLogin: true);
   }

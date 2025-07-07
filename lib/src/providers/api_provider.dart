@@ -5,7 +5,7 @@ import 'package:bilibili_desktop/src/http/api_service.dart';
 import 'package:bilibili_desktop/src/http/network_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:bilibili_desktop/src/utils/logger.dart' show logger;
+import 'package:bilibili_desktop/src/utils/logger.dart' show logger, L;
 import 'package:path_provider/path_provider.dart';
 
 Future<CookieJar> prepareJar() async {
@@ -41,11 +41,11 @@ extension ApiProvider<T> on Future<ApiResponse<T>> {
       if (response.isSuccess) {
         return response.data!;
       } else {
-        logger.e("api error: ${response.message}");
+        L.e("api error: ${response.message}");
         throw Exception(response.message);
       }
     } catch (e, s) {
-      logger.e("catch error: $e, $s");
+      L.e("catch error: $e, $s");
       rethrow;
     }
   }

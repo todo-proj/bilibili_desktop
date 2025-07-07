@@ -46,10 +46,12 @@ class MainViewModel extends _$MainViewModel {
     return sideBarItems;
   }
 
-
-
   void refreshSideBar() {
     state = state.copyWith(sideBarItems: _generateSideBarItems());
+  }
+
+  void search(String content) {
+
   }
 }
 

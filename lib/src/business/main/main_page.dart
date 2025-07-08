@@ -1,86 +1,147 @@
 import 'dart:io';
 
+import 'package:bilibili_desktop/src/business/home/home_page_head.dart';
 import 'package:bilibili_desktop/src/business/main/main_view_model.dart';
+import 'package:bilibili_desktop/src/business/main/system_titlebar.dart';
 import 'package:bilibili_desktop/src/business/main/title_search_panel.dart';
+import 'package:bilibili_desktop/src/config/window_config.dart';
+import 'package:bilibili_desktop/src/providers/router/main_route.dart';
+import 'package:bilibili_desktop/src/utils/widget_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:window_manager/window_manager.dart';
 
-import 'system_titlebar.dart';
 import '../common/window_control_area.dart';
 import 'side_bar.dart';
 
 class MainPage extends ConsumerStatefulWidget {
   final Widget child;
+  final String? path;
 
-  const MainPage({super.key, required this.child});
+  const MainPage({super.key, required this.child, this.path});
 
   @override
   ConsumerState<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends ConsumerState<MainPage> {
+class _MainPageState extends ConsumerState<MainPage> with WindowListener{
 
   late MainViewModel _vm;
+  final GlobalKey<TitleSearchPanelState> _titleSearchPanelKey = GlobalKey();
+  final GlobalKey _windowControlsKey = GlobalKey();
+  final GlobalKey _maximizeAreaKey = GlobalKey();
+  final ValueNotifier<double> _windowControlsOffset = ValueNotifier(WindowConfig.defaultSearchPanelAlignOffset);
+
 
   @override
   void initState() {
     super.initState();
     _vm = ref.read(mainViewModelProvider.notifier);
+    windowManager.addListener(this);
+  }
+
+  @override
+  void dispose() {
+    _windowControlsOffset.dispose();
+    windowManager.removeListener(this);
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(mainViewModelProvider);
     return Scaffold(
-      body: GestureDetector(
-        onTap: (){
-          // _vm.hideSearchPanel();
+      body: Listener(
+        behavior: HitTestBehavior.opaque,
+        onPointerDown: (event) {
+          final TitleSearchPanelState? widgetState = _titleSearchPanelKey.currentState;
+          if (widgetState == null) {
+            return;
+          }
+          final position = event.position;
+          if (!widgetState.isClickInsideTextField(position) || !isClickInsideArea(position, _titleSearchPanelKey)) {
+            _vm.hideSearchPanel();
+          }
         },
-        child: Row(
-          children: [
-            SideBar(),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: 80,
-                    color: Colors.white,
-                    padding: EdgeInsets.only(
-                      top: 20,
-                      bottom: 20,
-                      left: 30,
-                      right: 30,
-                    ),
-                    child: DoubleTapMaximizeArea(
-                      child: Stack(
-                        children: [
-                          Row(
-                            children: [
-                              Image.asset(
-                                'assets/images/bilibili_logo.png',
-                                width: 80,
-                                color: Colors.pinkAccent,
+        child: LayoutBuilder(builder: (context, constraints) {
+          debugPrint('constraints: $constraints');
+          return Row(
+            children: [
+              SideBar(),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Container(
+                      key: _maximizeAreaKey,
+                      width: double.infinity,
+                      height: WindowConfig.systemTitleBarHeight,
+                      color: Colors.white,
+                      padding: EdgeInsets.only(
+                        top: 10,
+                        bottom: 10,
+                        left: WindowConfig.systemTitleBarPaddingHorizontal,
+                        right:  WindowConfig.systemTitleBarPaddingHorizontal,
+                      ),
+                      child: DoubleTapMaximizeArea(
+                        child: Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.center,
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/bilibili_logo.png',
+                                    width: 60,
+                                    color: Colors.pinkAccent,
+                                  ),
+                                  Expanded(child: _buildTitleHead(widget.path)),
+                                  KeyedSubtree(
+                                    key: _windowControlsKey,
+                                    child: Platform.isMacOS ? const SizedBox.shrink() : WindowControlsWidget(),)
+                                ],
                               ),
-                              const Spacer(),
-                              Platform.isMacOS ? const SizedBox() : SystemTitleBar(),
-                            ],
-                          ),
-                          TitleSearchPanel(rightMargin: 120,)
-                        ],
+                            ),
+                            ValueListenableBuilder(
+                              valueListenable: _windowControlsOffset,
+                              builder: (context, value, child) {
+                                debugPrint('_windowControlsOffset value: $value');
+                                return TitleSearchPanel(key: _titleSearchPanelKey, offset: value,);
+                              }
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: widget.child,
-                  ),
-                ],
+                    Expanded(
+                      child: widget.child,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          );
+        }),
       ),
     );
+  }
+
+  @override
+  void onWindowResize() {
+    _calculateTitleSearchPanelOffset();
+  }
+
+
+  Widget _buildTitleHead(String? tag) {
+    debugPrint('_buildTitleHead: $tag');
+    return switch(tag) {
+      MainRoute.home => const HomePageHead(),
+      _ => const SizedBox.shrink(),
+    };
+  }
+
+  void _calculateTitleSearchPanelOffset() async{
+    final size = await windowManager.getSize();
+    _windowControlsOffset.value = WindowConfig.calculateSearchPanelOffset(size.width);
   }
 }

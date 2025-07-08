@@ -26,13 +26,9 @@ class MainRoute {
 // 这个 ShellRoute 会包裹 /main 下的所有子路由
 final mainRouteProvider = Provider<ShellRoute>((ref){
   return ShellRoute(
-    builder: (BuildContext context, GoRouterState state, Widget child) {
-      // 这个 child 是 ShellRoute.routes 中匹配到的页面
-      return MainPage(child: child);
-    },
     pageBuilder: (context, state, child) {
       return CustomTransitionPage(
-        child: MainPage(child: child),
+        child: MainPage(path: state.fullPath, child: child,),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },

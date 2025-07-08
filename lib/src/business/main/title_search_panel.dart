@@ -1,18 +1,20 @@
 import 'package:bilibili_desktop/src/business/main/main_view_model.dart';
+import 'package:bilibili_desktop/src/config/window_config.dart';
+import 'package:bilibili_desktop/src/utils/widget_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TitleSearchPanel extends ConsumerStatefulWidget {
 
-  final double rightMargin;
-  const TitleSearchPanel({super.key, required this.rightMargin});
+  final double offset;
+  const TitleSearchPanel({super.key, required this.offset});
 
   @override
-  ConsumerState<TitleSearchPanel> createState() => _TitleSearchPanelState();
+  ConsumerState<TitleSearchPanel> createState() => TitleSearchPanelState();
 }
 
-class _TitleSearchPanelState extends ConsumerState<TitleSearchPanel> {
+class TitleSearchPanelState extends ConsumerState<TitleSearchPanel> {
   final TextEditingController _controller = TextEditingController();
   final LayerLink _layerLink = LayerLink();
   final FocusNode _panelFocusNode = FocusNode();
@@ -44,7 +46,7 @@ class _TitleSearchPanelState extends ConsumerState<TitleSearchPanel> {
       _hideSearchPanel();
     }
     return AnimatedAlign(
-      alignment: showPanel ? Alignment.center : Alignment(0.6, 0.0),
+      alignment: showPanel ? Alignment.center : Alignment(widget.offset, 0.0),
       duration: Duration(milliseconds: 200),
       onEnd: (){
         if (showPanel) {
@@ -54,19 +56,21 @@ class _TitleSearchPanelState extends ConsumerState<TitleSearchPanel> {
       child: CompositedTransformTarget(
         link: _layerLink,
         child: AnimatedContainer(
-          width: showPanel ? 400 : 200,
+          width: showPanel ? WindowConfig.searchPanelExpandedWidth : WindowConfig.searchPanelWidth,
           duration: Duration(milliseconds: 200),
+          height: 40,
           decoration: showPanel
               ? BoxDecoration(
                   border: Border.all(color: Colors.pink, width: 1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(6),
                 )
               : BoxDecoration(
                   color: Colors.grey,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(6),
                 ),
           child: TextField(
             key: _textFieldKey,
+            textAlignVertical: TextAlignVertical.center,
             focusNode: _panelFocusNode,
             controller: _controller,
             onTap: (){
@@ -74,9 +78,13 @@ class _TitleSearchPanelState extends ConsumerState<TitleSearchPanel> {
             },
             decoration: InputDecoration(
               hintText: '搜索你感兴趣的视频',
-              suffixIcon: Icon(Icons.search),
+              hintStyle: TextStyle(fontSize: 14),
+              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10), // 让文字垂直居中
+              suffixIcon: Icon(Icons.search, size: 24,),
               border: InputBorder.none,
+              isDense: true,
             ),
+            style: TextStyle(fontSize: 14),
           ),
         ),
       ),
@@ -84,10 +92,10 @@ class _TitleSearchPanelState extends ConsumerState<TitleSearchPanel> {
   }
 
 
-  OverlayEntry _createOverlayEntry(Offset offset, Size textFieldSize) {
+  OverlayEntry _createOverlayEntry() {
     return OverlayEntry(
       builder: (context) => Positioned(
-        width: 400,
+        width: WindowConfig.searchPanelExpandedWidth,
         height: 400,
         child: CompositedTransformFollower(
           link: _layerLink,
@@ -95,33 +103,11 @@ class _TitleSearchPanelState extends ConsumerState<TitleSearchPanel> {
           child: Material(
             elevation: 4.0,
             borderRadius: BorderRadius.circular(8),
-            child: Listener(
-              behavior: HitTestBehavior.opaque,
-              onPointerDown: (event) {
-                final Offset clickPosition = event.position;
-                // 检查点击是否在TextField区域内
-                bool isClickInTextField = _isClickInsideArea(
-                    clickPosition,
-                    offset,
-                    textFieldSize
-                );
-                // 检查点击是否在面板区域内
-                bool isClickInPanel = _isClickInsideArea(
-                    clickPosition,
-                    Offset(offset.dx, offset.dy + textFieldSize.height + 4),
-                    Size(textFieldSize.width, 400)
-                );
-                // 如果点击在TextField或面板外部，则关闭面板
-                if (!isClickInTextField && !isClickInPanel) {
-                  _vm.hideSearchPanel();
-                }
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Center(child: Text("搜索面板")),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
               ),
+              child: Center(child: Text("搜索面板")),
             ),
           ),
         ),
@@ -129,19 +115,12 @@ class _TitleSearchPanelState extends ConsumerState<TitleSearchPanel> {
     );
   }
 
-  bool _isClickInsideArea(Offset globalPosition, Offset areaOffset, Size areaSize) {
-    return globalPosition.dx >= areaOffset.dx &&
-        globalPosition.dx <= areaOffset.dx + areaSize.width &&
-        globalPosition.dy >= areaOffset.dy &&
-        globalPosition.dy <= areaOffset.dy + areaSize.height;
+  bool isClickInsideTextField(Offset globalPosition) {
+    return isClickInsideArea(globalPosition, _textFieldKey);
   }
 
   void _showSearchPanel() {
-    // 获取TextField的位置和大小
-    final RenderBox renderBox = _textFieldKey.currentContext!.findRenderObject() as RenderBox;
-    final Offset offset = renderBox.localToGlobal(Offset.zero);
-    final Size size = renderBox.size;
-    final overlayEntry = _createOverlayEntry(offset, size);
+    final overlayEntry = _createOverlayEntry();
     _searchPanel = overlayEntry;
     Overlay.of(context).insert(overlayEntry);
   }

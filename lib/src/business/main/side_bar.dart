@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bilibili_desktop/src/business/login/login_state_tool.dart';
 import 'package:bilibili_desktop/src/business/main/main_view_model.dart';
 import 'package:bilibili_desktop/src/business/main/side_bar_item.dart';
+import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/providers/router/main_route.dart';
 import 'package:bilibili_desktop/src/providers/router/root_route.dart';
 import 'package:bilibili_desktop/src/providers/theme/themes_provider.dart';
@@ -31,7 +32,7 @@ class _SideBarState extends ConsumerState<SideBar> {
     );
 
     return Container(
-      width: 80,
+      width: WindowConfig.sideBarWidth,
       color: Colors.grey.withAlpha(111),
       child: Column(
         spacing: 10,

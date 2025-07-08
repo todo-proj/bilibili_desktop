@@ -1,3 +1,4 @@
+import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/providers/router/root_route.dart';
 import 'package:bilibili_desktop/src/providers/theme/themes_provider.dart';
 import 'package:bilibili_desktop/src/utils/app_storage.dart';
@@ -15,8 +16,8 @@ void main() async{
   await AppStorage.init();
   await windowManager.ensureInitialized();
   WindowOptions windowOptions = WindowOptions(
-    size: Size(1000, 750),
-    minimumSize: Size(800, 600),
+    size: Size(WindowConfig.windowWidth, WindowConfig.windowHeight),
+    minimumSize: Size(WindowConfig.windowMinWidth, WindowConfig.windowMinHeight),
     center: true,
     backgroundColor: Colors.transparent,
     skipTaskbar: false,

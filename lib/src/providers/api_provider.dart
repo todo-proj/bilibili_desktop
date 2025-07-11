@@ -1,11 +1,12 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:bilibili_desktop/src/http/api_response.dart';
 import 'package:bilibili_desktop/src/http/api_service.dart';
 import 'package:bilibili_desktop/src/http/network_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:bilibili_desktop/src/utils/logger.dart' show logger, L;
+import 'package:bilibili_desktop/src/utils/logger.dart' show L;
 import 'package:path_provider/path_provider.dart';
 
 Future<CookieJar> prepareJar() async {
@@ -15,6 +16,7 @@ Future<CookieJar> prepareJar() async {
   if (!Directory(cookiePath).existsSync()) {
     Directory(cookiePath).createSync(recursive: true);
   }
+  debugPrint("cookie path: $cookiePath");
   final jar = PersistCookieJar(
     ignoreExpires: true,
     storage: FileStorage(cookiePath),

@@ -48,9 +48,10 @@ class NetworkManager {
       },
     );
 
-    final cookieManager = CookieManager(await prepareJar());
+    // final cookieManager = CookieManager(await prepareJar());
     // 添加拦截器
-    _setupInterceptors([cookieManager]);
+    // _setupInterceptors([cookieManager]);
+    _setupInterceptors([]);
   }
 
   void _setupInterceptors(List<Interceptor> interceptors) {

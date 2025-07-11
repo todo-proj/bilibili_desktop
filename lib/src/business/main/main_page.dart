@@ -8,6 +8,7 @@ import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/providers/router/main_route.dart';
 import 'package:bilibili_desktop/src/utils/widget_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -49,7 +50,8 @@ class _MainPageState extends ConsumerState<MainPage> with WindowListener{
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(mainViewModelProvider);
+    debugPaintSizeEnabled = true;
+    final showPanel = ref.watch(mainViewModelProvider.select((e)=>e.showSearchPanel));
     return Scaffold(
       body: Listener(
         behavior: HitTestBehavior.opaque,
@@ -76,7 +78,7 @@ class _MainPageState extends ConsumerState<MainPage> with WindowListener{
                       key: _maximizeAreaKey,
                       width: double.infinity,
                       height: WindowConfig.systemTitleBarHeight,
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.surface,
                       padding: EdgeInsets.only(
                         top: 10,
                         bottom: 10,
@@ -89,13 +91,16 @@ class _MainPageState extends ConsumerState<MainPage> with WindowListener{
                             Align(
                               alignment: Alignment.center,
                               child: Row(
+                                spacing: 40,
                                 children: [
                                   Image.asset(
                                     'assets/images/bilibili_logo.png',
-                                    width: 60,
+                                    width: 70,
                                     color: Colors.pinkAccent,
                                   ),
-                                  Expanded(child: _buildTitleHead(widget.path)),
+                                  Expanded(child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 300),
+                                      child: showPanel ? const SizedBox.shrink() : _buildTitleHead(widget.path))),
                                   KeyedSubtree(
                                     key: _windowControlsKey,
                                     child: Platform.isMacOS ? const SizedBox.shrink() : WindowControlsWidget(),)
@@ -105,7 +110,6 @@ class _MainPageState extends ConsumerState<MainPage> with WindowListener{
                             ValueListenableBuilder(
                               valueListenable: _windowControlsOffset,
                               builder: (context, value, child) {
-                                debugPrint('_windowControlsOffset value: $value');
                                 return TitleSearchPanel(key: _titleSearchPanelKey, offset: value,);
                               }
                             )
@@ -133,7 +137,6 @@ class _MainPageState extends ConsumerState<MainPage> with WindowListener{
 
 
   Widget _buildTitleHead(String? tag) {
-    debugPrint('_buildTitleHead: $tag');
     return switch(tag) {
       MainRoute.home => const HomePageHead(),
       _ => const SizedBox.shrink(),

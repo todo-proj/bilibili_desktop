@@ -1,6 +1,7 @@
-import 'package:bilibili_desktop/src/business/common/common_tab_bar.dart';
+import 'package:bilibili_desktop/src/business/common/widget/common_tab_bar.dart';
 import 'package:bilibili_desktop/src/business/home/home_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomePageHead extends ConsumerStatefulWidget {
@@ -22,8 +23,8 @@ class _HomePageHeadState extends ConsumerState<HomePageHead> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(homeViewModelProvider);
-    return CommonTabBar(items: state.items, initialIndex: 1, onTap: (item) {
+    final items = ref.read(homeViewModelProvider.select((e)=>e.items));
+    return CommonTabBar(items: items, initialIndex: 1, onTap: (item) {
       _viewModel.changeTab(item.tag);
     });
   }

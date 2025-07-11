@@ -32,7 +32,7 @@ abstract class ApiService {
   Future<ApiResponse<BasicUserInfoModel>> getUserAccountInformation();
 
 
-  @GET("x/web-interface/index/top/rcmd")
+  @GET("x/web-interface/wbi/index/top/feed/rcmd")
   Future<ApiResponse<RecommendVideoModel>> getRecommendVideoList(
     @Query("ps") int pageSize, {
     @Query("fresh_type") int freshType = 3,

@@ -10,6 +10,7 @@ import 'main_route.dart';
 class RootRoute {
   static const splash = '/';
   static const login = '/login';
+  static const video = '/video/:id';
 }
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -30,6 +31,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         ),
       ),
       ref.read(mainRouteProvider),
+      GoRoute(
+        path: RootRoute.video,
+        pageBuilder: (context, state) => DialogPage(
+          // 或者 MaterialPage
+          key: state.pageKey,
+          builder: (_) => const Center(child: LoginPage()),
+        ),
+      ),
     ],
     errorBuilder: (context, state) {
       return Scaffold(

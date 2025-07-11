@@ -1,4 +1,4 @@
-import 'package:bilibili_desktop/src/business/common/common_tab_bar.dart';
+import 'package:bilibili_desktop/src/business/common/widget/common_tab_bar.dart';
 import 'package:equatable/equatable.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

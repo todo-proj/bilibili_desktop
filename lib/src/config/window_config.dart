@@ -2,7 +2,7 @@ import 'dart:io';
 
 class WindowConfig {
   static const double windowWidth = 1000;
-  static const double windowHeight = 750;
+  static const double windowHeight = 800;
 
   static const double windowMinWidth = 800;
   static const double windowMinHeight = 650;

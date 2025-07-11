@@ -14,7 +14,6 @@ class RecommendVideoModel {
   dynamic businessCard;
   dynamic floorInfo;
   dynamic userFeature;
-  Abtest abtest;
   int preloadExposePct;
   int preloadFloorExposePct;
   int mid;
@@ -24,7 +23,6 @@ class RecommendVideoModel {
     required this.businessCard,
     required this.floorInfo,
     required this.userFeature,
-    required this.abtest,
     required this.preloadExposePct,
     required this.preloadFloorExposePct,
     required this.mid,
@@ -35,7 +33,6 @@ class RecommendVideoModel {
     businessCard: json["business_card"],
     floorInfo: json["floor_info"],
     userFeature: json["user_feature"],
-    abtest: Abtest.fromJson(json["abtest"]),
     preloadExposePct: json["preload_expose_pct"],
     preloadFloorExposePct: json["preload_floor_expose_pct"],
     mid: json["mid"],
@@ -46,26 +43,9 @@ class RecommendVideoModel {
     "business_card": businessCard,
     "floor_info": floorInfo,
     "user_feature": userFeature,
-    "abtest": abtest.toJson(),
     "preload_expose_pct": preloadExposePct,
     "preload_floor_expose_pct": preloadFloorExposePct,
     "mid": mid,
-  };
-}
-
-class Abtest {
-  String group;
-
-  Abtest({
-    required this.group,
-  });
-
-  factory Abtest.fromJson(Map<String, dynamic> json) => Abtest(
-    group: json["group"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "group": group,
   };
 }
 

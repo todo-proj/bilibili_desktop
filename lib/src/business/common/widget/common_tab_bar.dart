@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CommonTabBar extends StatelessWidget {
   final List<TabBarItem> items;
-  final void Function(TabBarItem) onTap;
+  final void Function(int, TabBarItem) onTap;
   final int initialIndex;
 
   const CommonTabBar({
@@ -31,7 +31,7 @@ class CommonTabBar extends StatelessWidget {
         }),
         dividerColor: Colors.transparent,
         onTap: (index) {
-          onTap(items[index]);
+          onTap(index, items[index]);
         },
       ),
     );

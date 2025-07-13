@@ -3,14 +3,14 @@ import 'package:window_manager/window_manager.dart';
 
 import '../common/app_icons.dart';
 
-class WindowControlsWidget extends StatefulWidget {
-  const WindowControlsWidget({super.key});
+class WindowControlsBar extends StatefulWidget {
+  const WindowControlsBar({super.key});
 
   @override
-  State<WindowControlsWidget> createState() => _WindowControlsWidgetState();
+  State<WindowControlsBar> createState() => _WindowControlsBarState();
 }
 
-class _WindowControlsWidgetState extends State<WindowControlsWidget> {
+class _WindowControlsBarState extends State<WindowControlsBar> {
 
   bool _isMaximized = false;
 

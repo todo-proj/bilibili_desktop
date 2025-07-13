@@ -1,10 +1,10 @@
 import 'dart:io';
 
 class WindowConfig {
-  static const double windowWidth = 1000;
+  static const double windowWidth = 1200;
   static const double windowHeight = 800;
 
-  static const double windowMinWidth = 800;
+  static const double windowMinWidth = 1000;
   static const double windowMinHeight = 650;
 
   static final double windowControlWidth = Platform.isMacOS ? 0 : 120;

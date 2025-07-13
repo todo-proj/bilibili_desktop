@@ -1,6 +1,8 @@
 import 'package:bilibili_desktop/src/business/common/dialog_page.dart';
 import 'package:bilibili_desktop/src/business/login/login_page.dart';
 import 'package:bilibili_desktop/src/business/splash_page.dart';
+import 'package:bilibili_desktop/src/business/video/video_page.dart';
+import 'package:bilibili_desktop/src/http/model/recommend_video_model.dart' show Item;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -33,11 +35,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ref.read(mainRouteProvider),
       GoRoute(
         path: RootRoute.video,
-        pageBuilder: (context, state) => DialogPage(
-          // 或者 MaterialPage
-          key: state.pageKey,
-          builder: (_) => const Center(child: LoginPage()),
-        ),
+        builder: (context, state) {
+          Item item = state.extra as Item;
+          return VideoPage(cid: item.cid, bvid: item.bvid, mid: item.owner.mid.toString(),);
+        },
       ),
     ],
     errorBuilder: (context, state) {

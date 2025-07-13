@@ -1,4 +1,7 @@
 import 'package:bilibili_desktop/src/http/model/basic_user_info_model.dart';
+import 'package:bilibili_desktop/src/http/model/relation_stat_model.dart';
+import 'package:bilibili_desktop/src/http/model/user_card_model.dart';
+import 'package:bilibili_desktop/src/http/model/wbi_img_model.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'api_response.dart';
@@ -21,9 +24,7 @@ abstract class ApiService {
   Future<ApiResponse<LoginQRCodeModel>> generateCode();
 
   @GET("x/passport-login/web/qrcode/poll")
-  Future<ApiResponse<dynamic>> checkCode(
-    @Query("qrcode_key") String qrcodeKey,
-  );
+  Future<ApiResponse<dynamic>> checkCode(@Query("qrcode_key") String qrcodeKey);
 
   @GET("x/member/web/account")
   Future<ApiResponse<AccountModel>> getAccount();
@@ -31,6 +32,8 @@ abstract class ApiService {
   @GET("x/web-interface/nav")
   Future<ApiResponse<BasicUserInfoModel>> getUserAccountInformation();
 
+  @GET("x/web-interface/nav")
+  Future<ApiResponse<WbiImgModel>> getWbiImg();
 
   @GET("x/web-interface/wbi/index/top/feed/rcmd")
   Future<ApiResponse<RecommendVideoModel>> getRecommendVideoList(
@@ -41,12 +44,14 @@ abstract class ApiService {
   @GET("x/web-interface/view")
   Future<ApiResponse<VideoInfoModel>> videoInfo(@Query("bvid") String bvid);
 
-  @GET("x/player/playurl")
-  Future<ApiResponse<VideoUrlModel>> videoUrl(
-    @Query("bvid") String bvid,
-    @Query("cid") String cid, {
-    @Query("qn") String qn = "80",
-  });
+  @GET('x/web-interface/card')
+  Future<ApiResponse<UserCardModel>> userCard(@Query("mid") String mid,);
+
+  @GET("x/web-interface/archive/related")
+  Future<ApiResponse<List<Item>>> getRelatedVideo(@Query("bvid") String bvid);
+
+  @GET("x/player/wbi/playurl")
+  Future<ApiResponse<VideoUrlModel>> videoUrl(@Queries() Map<String, dynamic> params);
 
   @GET("x/v2/reply")
   Future<ApiResponse<VideoReplyModel>> videoReply(

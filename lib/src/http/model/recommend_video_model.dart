@@ -52,19 +52,16 @@ class RecommendVideoModel {
 class Item {
   int id;
   String bvid;
-  int cid;
+  String cid;
   String uri;
   String pic;
-  String pic43;
   String title;
   int duration;
   int pubdate;
   Owner owner;
   Stat stat;
   dynamic avFeature;
-  int isFollowed;
   dynamic rcmdReason;
-  int showInfo;
   String trackId;
   int pos;
   dynamic roomInfo;
@@ -72,9 +69,6 @@ class Item {
   dynamic businessInfo;
   int isStock;
   int enableVt;
-  String vtDisplay;
-  int dislikeSwitch;
-  int dislikeSwitchPc;
 
   Item({
     required this.id,
@@ -82,16 +76,13 @@ class Item {
     required this.cid,
     required this.uri,
     required this.pic,
-    required this.pic43,
     required this.title,
     required this.duration,
     required this.pubdate,
     required this.owner,
     required this.stat,
     required this.avFeature,
-    required this.isFollowed,
     required this.rcmdReason,
-    required this.showInfo,
     required this.trackId,
     required this.pos,
     required this.roomInfo,
@@ -99,37 +90,28 @@ class Item {
     required this.businessInfo,
     required this.isStock,
     required this.enableVt,
-    required this.vtDisplay,
-    required this.dislikeSwitch,
-    required this.dislikeSwitchPc,
   });
 
   factory Item.fromJson(Map<String, dynamic> json) => Item(
-    id: json["id"],
+    id: json["id"] ?? 0,
     bvid: json["bvid"],
-    cid: json["cid"],
-    uri: json["uri"],
+    cid: json["cid"].toString(),
+    uri: json["uri"] ?? "",
     pic: json["pic"],
-    pic43: json["pic_4_3"],
     title: json["title"],
     duration: json["duration"],
     pubdate: json["pubdate"],
     owner: Owner.fromJson(json["owner"]),
     stat: Stat.fromJson(json["stat"]),
     avFeature: json["av_feature"],
-    isFollowed: json["is_followed"],
     rcmdReason: json["rcmd_reason"],
-    showInfo: json["show_info"],
-    trackId: json["track_id"],
-    pos: json["pos"],
+    trackId: json["track_id"] ?? "",
+    pos: json["pos"] ?? 0,
     roomInfo: json["room_info"],
     ogvInfo: json["ogv_info"],
     businessInfo: json["business_info"],
-    isStock: json["is_stock"],
+    isStock: json["is_stock"] ?? 0,
     enableVt: json["enable_vt"],
-    vtDisplay: json["vt_display"],
-    dislikeSwitch: json["dislike_switch"],
-    dislikeSwitchPc: json["dislike_switch_pc"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -138,16 +120,13 @@ class Item {
     "cid": cid,
     "uri": uri,
     "pic": pic,
-    "pic_4_3": pic43,
     "title": title,
     "duration": duration,
     "pubdate": pubdate,
     "owner": owner.toJson(),
     "stat": stat.toJson(),
     "av_feature": avFeature,
-    "is_followed": isFollowed,
     "rcmd_reason": rcmdReason,
-    "show_info": showInfo,
     "track_id": trackId,
     "pos": pos,
     "room_info": roomInfo,
@@ -155,9 +134,6 @@ class Item {
     "business_info": businessInfo,
     "is_stock": isStock,
     "enable_vt": enableVt,
-    "vt_display": vtDisplay,
-    "dislike_switch": dislikeSwitch,
-    "dislike_switch_pc": dislikeSwitchPc,
   };
 }
 

@@ -10,7 +10,7 @@ String videoInfoModelToJson(VideoInfoModel data) => json.encode(data.toJson());
 
 class VideoInfoModel {
   String bvid;
-  int aid;
+  String aid;
   int videos;
   int tid;
   String tname;
@@ -28,7 +28,7 @@ class VideoInfoModel {
   Stat stat;
   ArgueInfo argueInfo;
   String videoInfoModelDynamic;
-  int cid;
+  String cid;
   Dimension dimension;
   dynamic premiere;
   int teenageMode;
@@ -97,7 +97,8 @@ class VideoInfoModel {
 
   factory VideoInfoModel.fromJson(Map<String, dynamic> json) => VideoInfoModel(
     bvid: json["bvid"],
-    aid: json["aid"],
+    aid: json["aid"].toString(),
+    cid: json["cid"].toString(),
     videos: json["videos"],
     tid: json["tid"],
     tname: json["tname"],
@@ -115,7 +116,6 @@ class VideoInfoModel {
     stat: Stat.fromJson(json["stat"]),
     argueInfo: ArgueInfo.fromJson(json["argue_info"]),
     videoInfoModelDynamic: json["dynamic"],
-    cid: json["cid"],
     dimension: Dimension.fromJson(json["dimension"]),
     premiere: json["premiere"],
     teenageMode: json["teenage_mode"],

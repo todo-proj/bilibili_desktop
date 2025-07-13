@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:bilibili_desktop/src/business/home/home_page_head.dart';
 import 'package:bilibili_desktop/src/business/main/main_view_model.dart';
-import 'package:bilibili_desktop/src/business/main/system_titlebar.dart';
 import 'package:bilibili_desktop/src/business/main/title_search_panel.dart';
+import 'package:bilibili_desktop/src/business/main/window_control_bar.dart';
 import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/providers/router/main_route.dart';
 import 'package:bilibili_desktop/src/utils/widget_util.dart';
@@ -103,7 +103,7 @@ class _MainPageState extends ConsumerState<MainPage> with WindowListener{
                                       child: showPanel ? const SizedBox.shrink() : _buildTitleHead(widget.path))),
                                   KeyedSubtree(
                                     key: _windowControlsKey,
-                                    child: Platform.isMacOS ? const SizedBox.shrink() : WindowControlsWidget(),)
+                                    child: Platform.isMacOS ? const SizedBox.shrink() : WindowControlsBar(),)
                                 ],
                               ),
                             ),

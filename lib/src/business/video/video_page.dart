@@ -57,10 +57,15 @@ class _VideoPageState extends ConsumerState<VideoPage> {
                     left: 10,
                     top: 10,
                     child: GestureDetector(
-                        onTap: (){
-                          Navigator.of(context).pop();
-                        },
-                        child: Icon(Icons.arrow_back_ios_new, size: 30, color: Colors.white,)),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Icon(
+                        Icons.arrow_back_ios_new,
+                        size: 30,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -86,19 +91,44 @@ class _VideoPageState extends ConsumerState<VideoPage> {
                             },
                           ),
                           Spacer(),
-                          GestureDetector(
-                            onTap: (){},
-                              child: Icon(Icons.more_vert_rounded, color: Colors.white, size: 20,))
+                          Builder(
+                            builder: (ctx) {
+                              return IconButton(
+                                onPressed: () async {
+                                  final RenderBox buttonBox = ctx.findRenderObject() as RenderBox;
+                                  final position = RelativeRect.fromSize(
+                                    buttonBox.localToGlobal(Offset(-20, 40)) & buttonBox.size,
+                                    MediaQuery.of(context).size,
+                                  );
+                                  final selected = await showMenu(
+                                    context: ctx,
+                                    // 设置弹出位置
+                                    position: position,
+                                    color: Colors.grey,
+                                    items: [
+                                      PopupMenuItem(child: Text("选项1"), value: 1),
+                                      PopupMenuItem(child: Text("选项2"), value: 2),
+                                    ],
+                                  );
+                                  print(selected);
+                                },
+                                icon: Icon(
+                                  Icons.more_vert_rounded,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              );
+                            },
+                          ),
                         ],
                       ),
-                      Divider(
-                        thickness: 0.1,
-                        color: Colors.grey,
-                      ),
+                      Divider(thickness: 0.1, color: Colors.grey),
                       20.hSize,
-                      IndexedStack(
-                        index: selectedItemIndex,
-                        children: [VideoPageIntro(), VideoPageComment()],
+                      Expanded(
+                        child: IndexedStack(
+                          index: selectedItemIndex,
+                          children: [VideoPageIntro(), VideoPageComment()],
+                        ),
                       ),
                     ],
                   ),

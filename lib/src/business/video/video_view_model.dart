@@ -54,8 +54,12 @@ class VideoViewModel extends _$VideoViewModel {
       debugPrint('finish_getVideoInfo');
       state = state.copyWith(
         url: videoUrl.durl[0].url,
-        title: videoInfo.title, cid: videoInfo.cid, bvid: bvid, desc: videoInfo.desc,
+        title: videoInfo.title,
+        cid: videoInfo.cid,
+        bvid: bvid,
+        desc: videoInfo.desc,
         relatedVideo: relatedVideo,
+        pages: videoInfo.pages,
         owner: Owner(
           mid: upInfo.card.mid,
           name: upInfo.card.name,
@@ -63,6 +67,12 @@ class VideoViewModel extends _$VideoViewModel {
           following: upInfo.following,
           follower: upInfo.follower,
           likeNum: upInfo.likeNum,
+        ),
+        intro: VideoIntro(
+          coinNum: videoInfo.stat.coin,
+          collectNum: videoInfo.stat.favorite,
+          likeNum: videoInfo.stat.like,
+          shareNum: videoInfo.stat.share,
         ),
       );
       debugPrint('play_video');

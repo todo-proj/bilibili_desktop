@@ -139,7 +139,7 @@ class Item {
 
 
 class Owner {
-  int mid;
+  String mid;
   String name;
   String face;
 
@@ -150,7 +150,7 @@ class Owner {
   });
 
   factory Owner.fromJson(Map<String, dynamic> json) => Owner(
-    mid: json["mid"],
+    mid: json["mid"].toString(),
     name: json["name"],
     face: json["face"],
   );

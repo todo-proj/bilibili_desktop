@@ -1,5 +1,6 @@
 import 'package:bilibili_desktop/src/business/common/widget/common_tab_bar.dart';
 import 'package:bilibili_desktop/src/http/model/recommend_video_model.dart';
+import 'package:bilibili_desktop/src/http/model/video_info_model.dart';
 import 'package:equatable/equatable.dart';
 
 class VideoPageState extends Equatable {
@@ -13,6 +14,7 @@ class VideoPageState extends Equatable {
   final List<Item> relatedVideo;
   final int selectedItemIndex;
   final VideoIntro intro;
+  final List<Page> pages;
 
   const VideoPageState({
     this.bvid = "",
@@ -23,6 +25,7 @@ class VideoPageState extends Equatable {
     this.intro = const VideoIntro(),
     required this.items,
     this.relatedVideo = const [],
+    this.pages = const [],
     required this.selectedItemIndex,
     required this.owner,
   });
@@ -38,6 +41,7 @@ class VideoPageState extends Equatable {
     int? selectedItemIndex,
     Owner? owner,
     VideoIntro? intro,
+    List<Page>? pages,
   }) {
     return VideoPageState(
       bvid: bvid ?? this.bvid,
@@ -50,6 +54,7 @@ class VideoPageState extends Equatable {
       selectedItemIndex: selectedItemIndex ?? this.selectedItemIndex,
       owner: owner ?? this.owner,
       intro: intro ?? this.intro,
+      pages: pages ?? this.pages,
     );
   }
 
@@ -65,6 +70,7 @@ class VideoPageState extends Equatable {
     owner,
     relatedVideo,
     intro,
+    pages,
   ];
 }
 
@@ -92,18 +98,34 @@ class Owner extends Equatable {
 
 class VideoIntro extends Equatable {
   final bool showDesc;
+  final int likeNum;
+  final int shareNum;
+  final int coinNum;
+  final int collectNum;
   const VideoIntro({
     this.showDesc = false,
+    this.likeNum = 0,
+    this.shareNum = 0,
+    this.coinNum = 0,
+    this.collectNum = 0,
   });
 
   copyWith({
     bool? showDesc,
+    int? likeNum,
+    int? shareNum,
+    int? coinNum,
+    int? collectNum,
   }) {
     return VideoIntro(
       showDesc: showDesc ?? this.showDesc,
+      likeNum: likeNum ?? this.likeNum,
+      shareNum: shareNum ?? this.shareNum,
+      coinNum: coinNum ?? this.coinNum,
+      collectNum: collectNum ?? this.collectNum,
     );
   }
 
   @override
-  List<Object?> get props => [showDesc];
+  List<Object?> get props => [showDesc, likeNum, shareNum, coinNum, collectNum];
 }

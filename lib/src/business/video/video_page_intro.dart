@@ -7,6 +7,7 @@ import 'package:bilibili_desktop/src/utils/widget_util.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'video_view_model.dart';
 
@@ -53,15 +54,16 @@ class _VideoPageIntroState extends ConsumerState<VideoPageIntro> {
                         style: TextStyle(fontSize: 14, color: Colors.white),
                       ),
                       Row(
+                        spacing: 10,
                         children: [
                           Text(
                             "${StringUtils.formatNum(owner.follower)}粉丝",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.white, fontSize: 11),
                           ),
                           CircleAvatar(backgroundColor: Colors.grey, radius: 1),
                           Text(
                             "${StringUtils.formatNum(owner.likeNum)}点赞",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.white, fontSize: 11),
                           ),
                         ],
                       ),
@@ -174,7 +176,7 @@ class _VideoPageIntroState extends ConsumerState<VideoPageIntro> {
                             itemCount: pages.length,
                             itemBuilder: (context, index) {
                               return ListTile(
-                                title: Text(pages[index].pagePart, style: TextStyle(color: Colors.white)),
+                                title: Text(pages[index].pagePart, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white)),
                               );
                             },
                           ),
@@ -186,24 +188,77 @@ class _VideoPageIntroState extends ConsumerState<VideoPageIntro> {
             20.hSize,
             //related video
             Column(
-              spacing: 10,
+              spacing: 15,
               children: [
                 ...relatedVideo.map(
                       (item) => GestureDetector(
                     onTap: (){
                       _vm.getVideoInfo(item.bvid, item.cid, item.owner.mid);
                     },
-                    child: Row(
-                      spacing: 10,
-                      children: [
-                        CachedNetworkImage(
-                          imageUrl: item.pic,
-                          fit: BoxFit.cover,
-                          width: 40,
-                          height: 40,
-                        ),
-                        Expanded(child: Text(item.title, maxLines: 2, overflow: TextOverflow.ellipsis,)),
-                      ],
+                    child: SizedBox(
+                      height: 78,
+                      width: double.infinity,
+                      child: Row(
+                        spacing: 10,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Stack(
+                              children: [
+                                CachedNetworkImage(
+                                  imageUrl: item.pic,
+                                  fit: BoxFit.cover,
+                                  width: 140,
+                                ),
+                                Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    left: 0,
+                                    child: Container(
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            colors: [Colors.transparent, Colors.black])
+                                      ),
+                                        child: Align(
+                                          alignment: Alignment(0.8, 0.4),
+                                            child: Text(StringUtils.formatDuration(item.duration), style: TextStyle(color: Colors.white),))))
+                              ],
+                            ),
+                          ),
+                          Expanded(child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: 2,
+                            children: [
+                              Text(item.title, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white),),
+                              Spacer(),
+                              Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    'icon_author'.svg,
+                                    semanticsLabel: 'UP作者',
+                                    width: 15,
+                                    height: 15,
+                                    colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+                                  ),
+                                  Text(item.owner.name, style: TextStyle(color: Colors.grey, fontSize: 11),),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Icon(Icons.play_circle_outline_rounded, size: 15, color: Colors.grey,),
+                                  Text(StringUtils.formatNum(item.stat.view), style: TextStyle(color: Colors.grey, fontSize: 11),),
+                                  5.wSize,
+                                  Icon(Icons.message, size: 15, color: Colors.grey,),
+                                  Text(StringUtils.formatNum(item.stat.danmaku), style: TextStyle(color: Colors.grey, fontSize: 11),),
+                                ],
+                              )
+                            ],
+                          )),
+                        ],
+                      ),
                     ),
                   ),
                 )

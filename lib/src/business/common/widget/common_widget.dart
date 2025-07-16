@@ -1,4 +1,4 @@
-import 'package:bilibili_desktop/src/business/login/login_state_tool.dart';
+import 'package:bilibili_desktop/src/business/user/user_center.dart';
 import 'package:bilibili_desktop/src/providers/router/root_route.dart';
 import 'package:bilibili_desktop/src/providers/theme/extension/app_color.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -54,7 +54,7 @@ Widget followButton(BuildContext context, String title, VoidCallback onPressed) 
           }),
         ),
         onPressed: () {
-          if (checkLogin(ref)) {
+          if (ref.read(userCenterProviderProvider.notifier).checkLogin()) {
             onPressed();
           } else {
             context.push(RootRoute.login);
@@ -71,12 +71,15 @@ Widget followButton(BuildContext context, String title, VoidCallback onPressed) 
   );
 }
 
-Widget userAvatar({required String url, required double size}) {
+Widget userAvatar({String? url, required double size}) {
   final defaultAvatar = Image.asset(
     'assets/images/icon_default_avatar.png',
     width: size,
     color: Colors.grey,
   );
+  if (url == null) {
+    return defaultAvatar;
+  }
   return ClipOval(
     child: CachedNetworkImage(
       imageUrl: url,

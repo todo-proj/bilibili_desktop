@@ -1,65 +1,71 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 
-class AdvancedDraggableArea extends StatefulWidget {
-  final Widget child;
 
-  const AdvancedDraggableArea({Key? key, required this.child}) : super(key: key);
-
-  @override
-  _AdvancedDraggableAreaState createState() => _AdvancedDraggableAreaState();
-}
-
-class _AdvancedDraggableAreaState extends State<AdvancedDraggableArea> {
-  bool _isDragging = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.move,
-      child: Listener(
-        onPointerDown: (event) {
-          _isDragging = true;
-          windowManager.startDragging();
-        },
-        onPointerUp: (event) {
-          _isDragging = false;
-        },
-        child: widget.child,
-      ),
-    );
-  }
-}
-
-class DoubleTapMaximizeArea extends StatelessWidget {
+class DoubleTapMaximizeArea extends StatefulWidget {
   final Widget child;
 
   const DoubleTapMaximizeArea({Key? key, required this.child}) : super(key: key);
 
   @override
+  _DoubleTapMaximizeAreaState createState() => _DoubleTapMaximizeAreaState();
+}
+
+class _DoubleTapMaximizeAreaState extends State<DoubleTapMaximizeArea> {
+  bool _shouldInterceptEvents = false;
+  int _tapCount = 0;
+  Timer? _timer;
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Listener(
+      onPointerDown: _handlePointerDown,
       behavior: HitTestBehavior.translucent,
-      onDoubleTap: _handleDoubleTap,
-      onPanStart: (details) {
-        windowManager.startDragging();
-      },
-      child: child,
+      child: _shouldInterceptEvents
+          ? AbsorbPointer(child: widget.child)
+          : widget.child,
     );
   }
 
-  void _handleDoubleTap() async{
+  void _handlePointerDown(PointerDownEvent event) {
+    _tapCount++;
+
+    if (_tapCount == 1) {
+      _timer = Timer(const Duration(milliseconds: 300), () {
+        _tapCount = 0;
+        setState(() {
+          _shouldInterceptEvents = false;
+        });
+      });
+    } else if (_tapCount == 2) {
+      _timer?.cancel();
+      _tapCount = 0;
+      setState(() {
+        _shouldInterceptEvents = true;
+      });
+      _handleDoubleTap();
+    }
+  }
+
+  void _handleDoubleTap() async {
     if (Platform.isMacOS) {
       final isFullScreen = await windowManager.isFullScreen();
       windowManager.setFullScreen(!isFullScreen);
-    }else {
+    } else {
       if (await windowManager.isMaximized()) {
         windowManager.unmaximize();
       } else {
         windowManager.maximize();
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 }

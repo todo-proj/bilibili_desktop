@@ -1,3 +1,4 @@
+import 'package:bilibili_desktop/src/providers/theme/extension/app_color.dart';
 import 'package:flutter/material.dart';
 
 class CommonTabBar extends StatelessWidget {
@@ -14,7 +15,8 @@ class CommonTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final labelStyle = Theme.of(context).tabBarTheme.labelStyle;
+    final indicatorColor = Theme.of(context).appColor.hoverColor;
+    final labelStyle = Theme.of(context).tabBarTheme.labelStyle?.copyWith(color: indicatorColor);
     final unselectedLabelStyle = Theme.of(context).tabBarTheme.unselectedLabelStyle;
     return DefaultTabController(
       length: items.length,
@@ -22,13 +24,14 @@ class CommonTabBar extends StatelessWidget {
       child: TabBar(
         isScrollable: true,
         tabAlignment: TabAlignment.start,
-        indicatorColor: Colors.pink,
+        indicatorColor: indicatorColor,
         padding: EdgeInsets.zero,
         labelPadding: EdgeInsets.only(right: 20, bottom: 5),
         tabs: List.generate(items.length, (index) {
           final item = items[index];
           return Builder(builder: (ctx) => HoverTextTab(item.title, DefaultTabController.of(ctx), index, unselectedLabelStyle, labelStyle));
         }),
+        overlayColor: MaterialStateProperty.all(Colors.transparent),
         dividerColor: Colors.transparent,
         onTap: (index) {
           onTap(index, items[index]);

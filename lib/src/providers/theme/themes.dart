@@ -5,16 +5,17 @@ import 'extension/app_color.dart';
 
 class Themes {
   static Color lightColor = const Color(0xffededed);
-  static Color darkColor = Colors.black;
+  static Color darkColor = const Color(0xFF131415);
 
   static final lightTheme = ThemeData(
     extensions: [
       const AppColor(
         refreshButtonColor: Colors.white,
         refreshButtonHoverColor: Colors.grey,
+        hoverColor: Color(0XFFC7356A),
       ),
     ],
-    colorScheme: ColorScheme.light(surface: lightColor, onSurface: darkColor),
+    colorScheme: ColorScheme.light(surface: lightColor, onSurface: darkColor, surfaceContainer: Color(0xFFF6F7F8)),
     // For light theming
     scaffoldBackgroundColor: Colors.grey.shade100,
     iconButtonTheme: IconButtonThemeData(
@@ -86,9 +87,10 @@ class Themes {
       AppColor(
         refreshButtonColor: Colors.grey,
         refreshButtonHoverColor: Colors.grey.withValues(alpha: 0.5),
+        hoverColor: Color(0XFFC7356A),
       ),
     ],
-    colorScheme: ColorScheme.light(surface: darkColor, onSurface: lightColor),
+    colorScheme: ColorScheme.light(surface: darkColor, onSurface: lightColor, surfaceContainer: Color(0xFF18191B)),
     // For dark theming
     scaffoldBackgroundColor: Colors.grey.shade900,
     iconButtonTheme: IconButtonThemeData(

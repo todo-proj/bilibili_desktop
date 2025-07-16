@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:bilibili_desktop/src/business/login/login_state_tool.dart';
 import 'package:bilibili_desktop/src/business/main/main_view_model.dart';
 import 'package:bilibili_desktop/src/business/main/side_bar_item.dart';
+import 'package:bilibili_desktop/src/business/user/user_center.dart';
 import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/providers/router/main_route.dart';
 import 'package:bilibili_desktop/src/providers/router/root_route.dart';
@@ -133,6 +133,7 @@ class _SideBarState extends ConsumerState<SideBar> {
     switch (item.tag) {
       case MainRoute.home:
       case MainRoute.settings:
+      case MainRoute.user:
         context.go(item.tag);
         break;
       case MainRoute.theme:
@@ -142,7 +143,7 @@ class _SideBarState extends ConsumerState<SideBar> {
       case MainRoute.zone:
       case MainRoute.featured:
       case MainRoute.following:
-        if (checkLogin(ref)) {
+        if (ref.read(userCenterProviderProvider.notifier).checkLogin()) {
           context.go(item.tag);
         }else {
           context.push(RootRoute.login);

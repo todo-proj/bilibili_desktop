@@ -24,12 +24,12 @@ class MainViewModel extends _$MainViewModel {
       SideBarItem(icon: Icons.home_rounded, title: '我的', tag: MainRoute.user),
       SideBarItem(tag: 'empty'),
     ];
-    final userState = ref.read(userCenterProviderProvider);
+    final userInfo = ref.read(userCenterProviderProvider.select((e)=>e.userInfo));
     dynamic zoneObject;
-    if (userState != null) {
+    if (userInfo != null) {
       zoneObject = {
-        'isLogin': userState.isLogin,
-        'avatar': userState.face,
+        'isLogin': userInfo.isLogin,
+        'avatar': userInfo.face,
       };
     }
     sideBarItems.add(SideBarItem(tag: MainRoute.zone, object: zoneObject, maintainState: false));

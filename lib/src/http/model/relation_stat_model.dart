@@ -9,11 +9,11 @@ RelationStatModel relationStatModelFromJson(String str) => RelationStatModel.fro
 String relationStatModelToJson(RelationStatModel data) => json.encode(data.toJson());
 
 class RelationStatModel {
-  int mid;
-  int following;
-  int whisper;
-  int black;
-  int follower;
+  String mid;
+  String following;
+  String whisper;
+  String black;
+  String follower;
 
   RelationStatModel({
     required this.mid,
@@ -24,11 +24,11 @@ class RelationStatModel {
   });
 
   factory RelationStatModel.fromJson(Map<String, dynamic> json) => RelationStatModel(
-    mid: json["mid"],
-    following: json["following"],
-    whisper: json["whisper"],
-    black: json["black"],
-    follower: json["follower"],
+    mid: json["mid"].toString(),
+    following: json["following"].toString(),
+    whisper: json["whisper"].toString(),
+    black: json["black"].toString(),
+    follower: json["follower"].toString(),
   );
 
   Map<String, dynamic> toJson() => {

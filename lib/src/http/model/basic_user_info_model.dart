@@ -15,9 +15,9 @@ class BasicUserInfoModel {
   final int faceNft;
   final int faceNftType;
   final LevelInfo levelInfo;
-  final int mid;
+  final String mid;
   final int mobileVerified;
-  final double money;
+  final String money;
   final int moral;
   final Official official;
   final OfficialVerify officialVerify;
@@ -84,9 +84,9 @@ class BasicUserInfoModel {
     faceNft: json["face_nft"],
     faceNftType: json["face_nft_type"],
     levelInfo: LevelInfo.fromJson(json["level_info"]),
-    mid: json["mid"],
+    mid: json["mid"].toString(),
     mobileVerified: json["mobile_verified"],
-    money: json["money"]?.toDouble(),
+    money: json["money"],
     moral: json["moral"],
     official: Official.fromJson(json["official"]),
     officialVerify: OfficialVerify.fromJson(json["officialVerify"]),

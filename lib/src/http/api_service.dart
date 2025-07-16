@@ -47,6 +47,9 @@ abstract class ApiService {
   @GET('x/web-interface/card')
   Future<ApiResponse<UserCardModel>> userCard(@Query("mid") String mid,);
 
+  @GET('x/relation/stat')
+  Future<ApiResponse<RelationStatModel>> relationStat(@Query("vmid") String vmid);
+
   @GET("x/web-interface/archive/related")
   Future<ApiResponse<List<Item>>> getRelatedVideo(@Query("bvid") String bvid);
 

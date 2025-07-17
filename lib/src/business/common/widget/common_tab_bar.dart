@@ -5,19 +5,25 @@ class CommonTabBar extends StatelessWidget {
   final List<TabBarItem> items;
   final void Function(int, TabBarItem) onTap;
   final int initialIndex;
+  final EdgeInsetsGeometry? labelPadding;
 
   const CommonTabBar({
     super.key,
     required this.items,
     required this.initialIndex,
     required this.onTap,
+    this.labelPadding = const EdgeInsets.only(right: 20, bottom: 5),
   });
 
   @override
   Widget build(BuildContext context) {
     final indicatorColor = Theme.of(context).appColor.hoverColor;
-    final labelStyle = Theme.of(context).tabBarTheme.labelStyle?.copyWith(color: indicatorColor);
-    final unselectedLabelStyle = Theme.of(context).tabBarTheme.unselectedLabelStyle;
+    final labelStyle = Theme.of(
+      context,
+    ).tabBarTheme.labelStyle?.copyWith(color: indicatorColor);
+    final unselectedLabelStyle = Theme.of(
+      context,
+    ).tabBarTheme.unselectedLabelStyle;
     return DefaultTabController(
       length: items.length,
       initialIndex: initialIndex,
@@ -26,12 +32,37 @@ class CommonTabBar extends StatelessWidget {
         tabAlignment: TabAlignment.start,
         indicatorColor: indicatorColor,
         padding: EdgeInsets.zero,
-        labelPadding: EdgeInsets.only(right: 20, bottom: 5),
+        labelPadding: labelPadding,
         tabs: List.generate(items.length, (index) {
           final item = items[index];
-          return Builder(builder: (ctx) => HoverTextTab(item.title, DefaultTabController.of(ctx), index, unselectedLabelStyle, labelStyle));
+          return Builder(
+            builder: (ctx) {
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                  spacing: 10,
+                  children: [
+                    HoverTextTab(
+                      item.title,
+                      DefaultTabController.of(ctx),
+                      index,
+                      unselectedLabelStyle,
+                      labelStyle,
+                    ),
+                    if (item.num != null)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey.shade300,
+                        ),
+                        child: Text(item.num!, style: TextStyle(fontSize: 12, color: Colors.grey)),
+                      )
+                  ],
+              );
+            },
+          );
         }),
-        overlayColor: MaterialStateProperty.all(Colors.transparent),
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
         dividerColor: Colors.transparent,
         onTap: (index) {
           onTap(index, items[index]);
@@ -48,7 +79,13 @@ class HoverTextTab extends StatefulWidget {
   final TextStyle? style;
   final TextStyle? hoveredStyle;
 
-  const HoverTextTab(this.text, this.tabController, this.tabIndex, this.style, this.hoveredStyle);
+  const HoverTextTab(
+    this.text,
+    this.tabController,
+    this.tabIndex,
+    this.style,
+    this.hoveredStyle,
+  );
 
   @override
   State<HoverTextTab> createState() => _HoverTextTabState();
@@ -61,7 +98,7 @@ class _HoverTextTabState extends State<HoverTextTab> {
   void initState() {
     super.initState();
 
-    widget.tabController?.addListener((){
+    widget.tabController?.addListener(() {
       setState(() {});
     });
   }
@@ -83,6 +120,7 @@ class _HoverTextTabState extends State<HoverTextTab> {
 class TabBarItem {
   final String title;
   final String tag;
+  final String? num;
 
-  TabBarItem(this.title, this.tag);
+  TabBarItem(this.title, this.tag, {this.num});
 }

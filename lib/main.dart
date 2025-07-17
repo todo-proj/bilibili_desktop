@@ -1,5 +1,6 @@
 import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/providers/router/root_route.dart';
+import 'package:bilibili_desktop/src/providers/router/router_history.dart';
 import 'package:bilibili_desktop/src/providers/theme/themes_provider.dart';
 import 'package:bilibili_desktop/src/utils/app_storage.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,6 @@ class App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeModeState = ref.watch(themesProvider);
-    debugPrint('ThemeMode: ${themeModeState.mode}');
     return MaterialApp.router(
       title: 'BiliBili野生客户端',
       theme: Themes.lightTheme,

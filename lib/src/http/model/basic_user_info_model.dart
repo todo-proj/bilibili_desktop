@@ -86,7 +86,7 @@ class BasicUserInfoModel {
     levelInfo: LevelInfo.fromJson(json["level_info"]),
     mid: json["mid"].toString(),
     mobileVerified: json["mobile_verified"],
-    money: json["money"],
+    money: json["money"].toString(),
     moral: json["moral"],
     official: Official.fromJson(json["official"]),
     officialVerify: OfficialVerify.fromJson(json["officialVerify"]),

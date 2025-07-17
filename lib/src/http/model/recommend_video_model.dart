@@ -14,8 +14,8 @@ class RecommendVideoModel {
   dynamic businessCard;
   dynamic floorInfo;
   dynamic userFeature;
-  int preloadExposePct;
-  int preloadFloorExposePct;
+  double preloadExposePct;
+  double preloadFloorExposePct;
   int mid;
 
   RecommendVideoModel({

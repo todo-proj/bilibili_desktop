@@ -95,6 +95,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Column(
+                          spacing: 15,
                           children: [
                             _buildItem(dynamicNum, defaultHoverColor, TextStyle(fontSize: 13)),
                             Text('动态', style: TextStyle(fontSize: 13),),
@@ -109,6 +110,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                           ),
                         ),
                         Column(
+                          spacing: 15,
                           children: [
                             _buildItem(followingNum, defaultHoverColor, TextStyle(fontSize: 13)),
                             Text('关注', style: TextStyle(fontSize: 13)),
@@ -123,6 +125,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                           ),
                         ),
                         Column(
+                          spacing: 15,
                           children: [
                             _buildItem(followerNum, defaultHoverColor, TextStyle(fontSize: 13)),
                             Text('粉丝', style: TextStyle(fontSize: 13)),

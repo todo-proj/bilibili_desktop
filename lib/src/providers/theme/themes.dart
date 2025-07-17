@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'extension/app_color.dart';
 
 class Themes {
-  static Color lightColor = const Color(0xffededed);
-  static Color darkColor = const Color(0xFF131415);
+  static Color lightColor = Colors.white;
+  static Color darkColor = const Color(0xFF17181A);
 
   static final lightTheme = ThemeData(
     extensions: [
@@ -15,9 +15,9 @@ class Themes {
         hoverColor: Color(0XFFC7356A),
       ),
     ],
-    colorScheme: ColorScheme.light(surface: lightColor, onSurface: darkColor, surfaceContainer: Color(0xFFF6F7F8)),
+    colorScheme: ColorScheme.light(surface: lightColor, onSurface: darkColor, surfaceContainer: Color(0xFFEDEDED)),
     // For light theming
-    scaffoldBackgroundColor: Colors.grey.shade100,
+    scaffoldBackgroundColor: lightColor,
     iconButtonTheme: IconButtonThemeData(
       style: IconButton.styleFrom(foregroundColor: Colors.black).copyWith(
         foregroundColor: WidgetStateProperty.resolveWith((states) {
@@ -90,9 +90,9 @@ class Themes {
         hoverColor: Color(0XFFC7356A),
       ),
     ],
-    colorScheme: ColorScheme.light(surface: darkColor, onSurface: lightColor, surfaceContainer: Color(0xFF18191B)),
+    colorScheme: ColorScheme.light(surface: darkColor, onSurface: lightColor, surfaceContainer: Color(0xFF1E2022)),
     // For dark theming
-    scaffoldBackgroundColor: Colors.grey.shade900,
+    scaffoldBackgroundColor: darkColor,
     iconButtonTheme: IconButtonThemeData(
       style: IconButton.styleFrom(foregroundColor: Colors.white).copyWith(
         foregroundColor: WidgetStateProperty.resolveWith((states) {

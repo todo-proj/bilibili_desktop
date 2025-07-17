@@ -1,5 +1,9 @@
 
+import 'dart:io';
+
 import 'package:bilibili_desktop/src/business/user/user_center.dart';
+import 'package:bilibili_desktop/src/http/network_config.dart';
+import 'package:bilibili_desktop/src/http/network_manager.dart';
 import 'package:bilibili_desktop/src/providers/api_provider.dart';
 import 'package:bilibili_desktop/src/utils/wbi_check_util.dart';
 import 'package:equatable/equatable.dart';
@@ -31,8 +35,14 @@ class SplashViewModel extends _$SplashViewModel {
         final wbiImg = wbiResponse.data!.wbiImg;
         WbiCheckUtil.injectKey(wbiImg.imgUrl, wbiImg.subUrl);
       }
+      final fingerprint = await api.getFingerprint().handle();
+      final cookieJar = (await NetworkManager.instance).cookieJar;
+      cookieJar.saveFromResponse(Uri.http('api.bilibili.com'), [
+        Cookie('buvid3', fingerprint['b_3'] ?? ''),
+        Cookie('buvid4', fingerprint['b_4'] ?? ''),
+      ]);
     }catch(e, s) {
-      L.e(s);
+      L.e(e, stackTrace: s);
     }
     state = state.copyWith(checkLogin: true);
   }

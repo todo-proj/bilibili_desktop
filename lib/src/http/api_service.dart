@@ -1,5 +1,6 @@
 import 'package:bilibili_desktop/src/http/model/basic_user_info_model.dart';
 import 'package:bilibili_desktop/src/http/model/relation_stat_model.dart';
+import 'package:bilibili_desktop/src/http/model/search_result_model.dart';
 import 'package:bilibili_desktop/src/http/model/user_card_model.dart';
 import 'package:bilibili_desktop/src/http/model/wbi_img_model.dart';
 import 'package:dio/dio.dart';
@@ -32,8 +33,14 @@ abstract class ApiService {
   @GET("x/web-interface/nav")
   Future<ApiResponse<BasicUserInfoModel>> getUserAccountInformation();
 
+
   @GET("x/web-interface/nav")
   Future<ApiResponse<WbiImgModel>> getWbiImg();
+
+  // https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/misc/buvid3_4.md
+  // buvid3 , buvid4 需放入cookie
+  @GET("x/frontend/finger/spi")
+  Future<ApiResponse<dynamic>> getFingerprint();
 
   @GET("x/web-interface/wbi/index/top/feed/rcmd")
   Future<ApiResponse<RecommendVideoModel>> getRecommendVideoList(
@@ -55,6 +62,15 @@ abstract class ApiService {
 
   @GET("x/player/wbi/playurl")
   Future<ApiResponse<VideoUrlModel>> videoUrl(@Queries() Map<String, dynamic> params);
+
+  //https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/search/search_request.md
+  //鉴权方式：Wbi 签名, Cookie 中含有 buvid3 字段
+  // keyword
+  @GET('x/web-interface/wbi/search/all/v2')
+  Future<ApiResponse<SearchResultModel>> searchAll(@Queries() Map<String, dynamic> params);
+
+  @GET("x/web-interface/wbi/search/type")
+  Future<ApiResponse<SearchResultModel>> searchType(@Queries() Map<String, dynamic> params);
 
   @GET("x/v2/reply")
   Future<ApiResponse<VideoReplyModel>> videoReply(

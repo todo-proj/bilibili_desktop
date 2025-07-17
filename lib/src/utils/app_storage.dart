@@ -36,4 +36,16 @@ class AppStorage {
   static int getInt(String key, {int defaultValue = 0}) {
     return _prefsWithCache.getInt(key) ?? defaultValue;
   }
+
+  static List<String> getStringList(String key, {List<String> defaultValue = const []}) {
+    return _prefsWithCache.getStringList(key) ?? defaultValue;
+  }
+
+  static Future<void> setStringList(String key, List<String> value) {
+    return _prefsWithCache.setStringList(key, value);
+  }
+}
+
+class AppStorageKeys {
+  static const String searchHistory = "searchHistory";
 }

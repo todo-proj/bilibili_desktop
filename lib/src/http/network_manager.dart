@@ -1,12 +1,13 @@
 import 'package:bilibili_desktop/src/http/error_code.dart';
 import 'package:bilibili_desktop/src/providers/api_provider.dart';
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:curl_logger_dio_interceptor/curl_logger_dio_interceptor.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-import 'package:bilibili_desktop/src/utils/logger.dart' show logger, L;
+import 'package:bilibili_desktop/src/utils/logger.dart' show L;
 import 'interceptors/retry_interceptor.dart';
 import 'network_config.dart';
 import 'network_exception.dart';
@@ -14,6 +15,7 @@ import 'network_exception.dart';
 class NetworkManager {
   static NetworkManager? _instance;
   late Dio _dio;
+  late CookieJar _cookieJar;
 
   static Future<NetworkManager> get instance async {
     _instance ??= await NetworkManager._internal();
@@ -30,6 +32,7 @@ class NetworkManager {
   NetworkManager._create(this._dio);
 
   Dio get dio => _dio;
+  CookieJar get cookieJar => _cookieJar;
 
   Future<void> _setupDioAsync() async {
     // 基础配置
@@ -48,10 +51,10 @@ class NetworkManager {
       },
     );
 
-    // final cookieManager = CookieManager(await prepareJar());
+    _cookieJar = await prepareJar();
+    final cookieManager = CookieManager(_cookieJar);
     // 添加拦截器
-    // _setupInterceptors([cookieManager]);
-    _setupInterceptors([]);
+    _setupInterceptors([cookieManager]);
   }
 
   void _setupInterceptors(List<Interceptor> interceptors) {

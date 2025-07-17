@@ -14,7 +14,7 @@ class WindowConfig {
   static const double systemTitleBarHeight = 70;
   static const double systemTitleBarPaddingHorizontal = 30;
 
-  static const double searchPanelWidth = 200;
+  static const double searchPanelWidth = 300;
   static const double searchPanelExpandedWidth = 400;
 
   static const double searchPanelHeightPaddingHorizontal = 30;

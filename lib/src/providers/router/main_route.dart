@@ -1,10 +1,9 @@
 import 'package:bilibili_desktop/src/business/home/home_page.dart';
 import 'package:bilibili_desktop/src/business/main/main_page.dart';
+import 'package:bilibili_desktop/src/business/main/search/search_page.dart';
 import 'package:bilibili_desktop/src/business/message/direct_message_page.dart';
 import 'package:bilibili_desktop/src/business/setting/setting_page.dart';
-import 'package:bilibili_desktop/src/business/user/user_center.dart';
 import 'package:bilibili_desktop/src/business/user/user_page.dart';
-import 'package:bilibili_desktop/src/providers/router/root_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -20,6 +19,7 @@ class MainRoute {
   static const String featured = '/main/featured';
   static const String following = '/main/following';
   static const String theme = '/main/theme';
+  static const String search = '/main/search';
 }
 
 // Main Shell Route
@@ -89,6 +89,14 @@ final mainRouteProvider = Provider<ShellRoute>((ref){
         name: 'following',
         pageBuilder: (context, state) => _buildPageWithTransition(
           DirectMessagePage(key: state.pageKey),
+          state,
+        ),
+      ),
+      GoRoute(
+        path: MainRoute.search,
+        name: 'search',
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          SearchPage(key: state.pageKey),
           state,
         ),
       ),

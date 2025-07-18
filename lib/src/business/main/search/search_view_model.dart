@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:bilibili_desktop/src/business/common/event_dispatcher_mixin.dart';
+import 'package:bilibili_desktop/src/http/api_response.dart';
 import 'package:bilibili_desktop/src/http/model/search_result_model.dart'
     show Datum;
+import 'package:bilibili_desktop/src/http/model/search_suggest_model.dart';
+import 'package:bilibili_desktop/src/http/model/search_hot_word_model.dart'
+    show ListElement;
 import 'package:bilibili_desktop/src/providers/api_provider.dart';
 import 'package:bilibili_desktop/src/utils/app_storage.dart';
 import 'package:bilibili_desktop/src/utils/logger.dart' show L;
@@ -15,6 +21,7 @@ part 'search_view_model.g.dart';
 class SearchViewModel extends _$SearchViewModel {
   @override
   SearchState build() {
+    getSearchHotWord();
     return SearchState(
       history: _getSearchHistory(),
       items: [
@@ -42,12 +49,29 @@ class SearchViewModel extends _$SearchViewModel {
     );
   }
 
+  void enterSearchState() {
+    state = state.copyWith(isSearchState: true);
+  }
+
+  void exitSearchState() {
+    state = state.copyWith(showSearchPanel: false, isSearchState: false);
+  }
+
+  void hideSearchPanel() {
+    state = state.copyWith(showSearchPanel: false);
+  }
+
+  void showSearchPanel() {
+    state = state.copyWith(showSearchPanel: true);
+  }
+
   void search(String keyword) async {
     if (keyword.isEmpty) {
       return;
     }
     emitToStream(OpenSearchPageEvent());
     _addSearchHistory(keyword);
+    hideSearchPanel();
     final api = await ref.read(apiProvider);
     // webi验证
     final params = WbiCheckUtil.generateWbiParams({"keyword": keyword});
@@ -70,21 +94,51 @@ class SearchViewModel extends _$SearchViewModel {
       }
       // 组合primaryItems
       List<SearchTabBarItem> primaryItems = [];
-      primaryItems.add(_generateMultiTabBarItem(searchItems, SearchType.all, [
-        SearchType.mediaFt,
-        SearchType.mediaBangumi,
-        SearchType.video,
-      ]).copyWith(showNum: false));
+      primaryItems.add(
+        _generateMultiTabBarItem(searchItems, SearchType.all, [
+          SearchType.mediaFt,
+          SearchType.mediaBangumi,
+          SearchType.video,
+        ]).copyWith(showNum: false),
+      );
       _addItemToPrimary(primaryItems, searchItems, SearchType.video);
       _addItemToPrimary(primaryItems, searchItems, SearchType.mediaFt);
       _addItemToPrimary(primaryItems, searchItems, SearchType.mediaBangumi);
-      primaryItems.add(_generateMultiTabBarItem(searchItems, SearchType.live, [
-        SearchType.live,
-        SearchType.liveUser,
-        SearchType.liveRoom,
-      ]));
+      primaryItems.add(
+        _generateMultiTabBarItem(searchItems, SearchType.live, [
+          SearchType.live,
+          SearchType.liveUser,
+          SearchType.liveRoom,
+        ]),
+      );
       _addItemToPrimary(primaryItems, searchItems, SearchType.biliUser);
       state = state.copyWith(items: primaryItems, showPage: true);
+    } catch (e, s) {
+      L.e(e, stackTrace: s);
+    }
+  }
+
+  void getSearchSuggest(String content) async {
+    final api = await ref.read(searchApiProvider);
+    try {
+      final result = await api.searchSuggest(content).then((value) {
+        return ApiResponse<SearchSuggestModel>.fromJson(jsonDecode(value),
+              (json) => SearchSuggestModel.fromJson(json as Map<String, dynamic>),
+        );
+      }).handle();
+      if (result.tag.isNotEmpty) {
+        state = state.copyWith(searchSuggests: result.tag);
+      }
+    } catch (e, s) {
+      L.e(e, stackTrace: s);
+    }
+  }
+
+  void getSearchHotWord() async {
+    final api = await ref.read(apiProvider);
+    try {
+      final result = await api.searchHot(10).handle();
+      state = state.copyWith(hotWords: result.trending.list);
     } catch (e, s) {
       L.e(e, stackTrace: s);
     }
@@ -95,23 +149,43 @@ class SearchViewModel extends _$SearchViewModel {
     AppStorage.setStringList(AppStorageKeys.searchHistory, []);
   }
 
-  SearchTabBarItem _generateMultiTabBarItem(Map<SearchType, SearchTabBarItem> searchItems, SearchType container, List<SearchType> children) {
-    final empty = SearchTabBarItem(
-      type: SearchType.empty,
-      pages: 0,
-      total: 0,
+  void clearSearchSuggest() {
+    state = state.copyWith(searchSuggests: []);
+  }
+
+  SearchTabBarItem _generateMultiTabBarItem(
+    Map<SearchType, SearchTabBarItem> searchItems,
+    SearchType container,
+    List<SearchType> children,
+  ) {
+    final empty = SearchTabBarItem(type: SearchType.empty, pages: 0, total: 0);
+    final List<SearchTabBarItem> items = children
+        .map((e) => searchItems[e] ?? empty)
+        .where((e) => e != empty)
+        .toList();
+    final pages = items
+        .map((e) => e.pages)
+        .fold(0, (previousValue, element) => previousValue + element);
+    final total = items
+        .map((e) => e.total)
+        .fold(0, (previousValue, element) => previousValue + element);
+    return SearchTabBarItem(
+      type: container,
+      pages: pages,
+      total: total,
+      children: items,
     );
-    final List<SearchTabBarItem> items = children.map((e)=> searchItems[e] ?? empty).where((e)=>e != empty).toList();
-    final pages = items.map((e)=>e.pages).fold(0, (previousValue, element) => previousValue + element);
-    final total = items.map((e)=>e.total).fold(0, (previousValue, element) => previousValue + element);
-    return SearchTabBarItem(type: container, pages: pages, total: total, children: items);
   }
 
   List<String> _getSearchHistory() {
     return AppStorage.getStringList(AppStorageKeys.searchHistory);
   }
 
-  void _addItemToPrimary(List<SearchTabBarItem> primaryItems, Map<SearchType, SearchTabBarItem> searchItems, SearchType type) {
+  void _addItemToPrimary(
+    List<SearchTabBarItem> primaryItems,
+    Map<SearchType, SearchTabBarItem> searchItems,
+    SearchType type,
+  ) {
     final item = searchItems[type];
     if (item != null) {
       primaryItems.add(item);
@@ -123,6 +197,9 @@ class SearchViewModel extends _$SearchViewModel {
       return;
     }
     List<String> history = [...state.history];
+    if (history.contains(keyword)) {
+      history.remove(keyword);
+    }
     history.insert(0, keyword);
     if (history.length > 10) {
       history = history.sublist(0, 10);
@@ -138,20 +215,59 @@ class SearchState extends Equatable {
   final int primaryIndex;
   final bool showPage;
   final List<String> history;
+  final List<Tag> searchSuggests;
+  final List<ListElement> hotWords;
 
-  const SearchState({this.items = const [], this.primaryIndex = 0, this.showPage = false, this.history = const []});
+  // 搜索框移动到中间
+  final bool isSearchState;
 
-  copyWith({List<SearchTabBarItem>? items, int? primaryIndex, bool? showPage, List<String>? history}) {
+  // 搜索历史和热搜 panel
+  final bool showSearchPanel;
+
+  const SearchState({
+    this.items = const [],
+    this.primaryIndex = 0,
+    this.showPage = false,
+    this.history = const [],
+    this.searchSuggests = const [],
+    this.hotWords = const [],
+    this.isSearchState = false,
+    this.showSearchPanel = false,
+  });
+
+  copyWith({
+    List<SearchTabBarItem>? items,
+    int? primaryIndex,
+    bool? showPage,
+    List<String>? history,
+    List<Tag>? searchSuggests,
+    List<ListElement>? hotWords,
+    bool? isSearchState,
+    bool? showSearchPanel,
+  }) {
     return SearchState(
       items: items ?? this.items,
       primaryIndex: primaryIndex ?? this.primaryIndex,
       showPage: showPage ?? this.showPage,
       history: history ?? this.history,
+      searchSuggests: searchSuggests ?? this.searchSuggests,
+      hotWords: hotWords ?? this.hotWords,
+      isSearchState: isSearchState ?? this.isSearchState,
+      showSearchPanel: showSearchPanel ?? this.showSearchPanel,
     );
   }
 
   @override
-  List<Object?> get props => [items, primaryIndex, showPage, history];
+  List<Object?> get props => [
+    items,
+    primaryIndex,
+    showPage,
+    history,
+    searchSuggests,
+    hotWords,
+    isSearchState,
+    showSearchPanel,
+  ];
 }
 
 class SearchTabBarItem extends Equatable {

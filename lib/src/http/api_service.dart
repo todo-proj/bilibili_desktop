@@ -1,5 +1,6 @@
 import 'package:bilibili_desktop/src/http/model/basic_user_info_model.dart';
 import 'package:bilibili_desktop/src/http/model/relation_stat_model.dart';
+import 'package:bilibili_desktop/src/http/model/search_hot_word_model.dart';
 import 'package:bilibili_desktop/src/http/model/search_result_model.dart';
 import 'package:bilibili_desktop/src/http/model/user_card_model.dart';
 import 'package:bilibili_desktop/src/http/model/wbi_img_model.dart';
@@ -71,6 +72,14 @@ abstract class ApiService {
 
   @GET("x/web-interface/wbi/search/type")
   Future<ApiResponse<SearchResultModel>> searchType(@Queries() Map<String, dynamic> params);
+
+  // https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/search/suggest.md
+  @GET('suggest')
+  Future<String> searchSuggest(@Query('term') String term);
+
+  // https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/search/hot.md
+  @GET("x/web-interface/wbi/search/square")
+  Future<ApiResponse<SearchHotWordModel>> searchHot(@Query('limit') int limit);
 
   @GET("x/v2/reply")
   Future<ApiResponse<VideoReplyModel>> videoReply(

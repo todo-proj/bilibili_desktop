@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:bilibili_desktop/src/business/home/home_page_head.dart';
 import 'package:bilibili_desktop/src/business/main/main_view_model.dart';
 import 'package:bilibili_desktop/src/business/main/search/search_view_model.dart';
-import 'package:bilibili_desktop/src/business/main/title_search_panel.dart';
+import 'package:bilibili_desktop/src/business/main/search/title_search_panel.dart';
 import 'package:bilibili_desktop/src/business/main/window_control_bar.dart';
 import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/providers/router/main_route.dart';
@@ -30,6 +30,7 @@ class MainPage extends ConsumerStatefulWidget {
 class _MainPageState extends ConsumerState<MainPage> with WindowListener{
 
   late MainViewModel _vm;
+  late SearchViewModel _searchVM;
   final GlobalKey<TitleSearchPanelState> _titleSearchPanelKey = GlobalKey();
   final GlobalKey _windowControlsKey = GlobalKey();
   final GlobalKey _maximizeAreaKey = GlobalKey();
@@ -41,10 +42,11 @@ class _MainPageState extends ConsumerState<MainPage> with WindowListener{
   void initState() {
     super.initState();
     _vm = ref.read(mainViewModelProvider.notifier);
+    _searchVM = ref.read(searchViewModelProvider.notifier);
     windowManager.addListener(this);
     if (widget.path != MainRoute.search) {
       WidgetsBinding.instance.addPostFrameCallback((_){
-        _vm.exitSearchState();
+        _searchVM.exitSearchState();
       });
     }
   }
@@ -59,7 +61,7 @@ class _MainPageState extends ConsumerState<MainPage> with WindowListener{
   @override
   Widget build(BuildContext context) {
     debugPaintSizeEnabled = true;
-    final showPanel = ref.watch(mainViewModelProvider.select((e)=>e.showSearchPanel));
+    final isSearchState = ref.watch(searchViewModelProvider.select((e)=>e.isSearchState));
     final routerHistory = ref.read(routerHistoryProvider);
     return Scaffold(
       body: RouterHistoryScope(
@@ -74,14 +76,14 @@ class _MainPageState extends ConsumerState<MainPage> with WindowListener{
             }
             final position = event.position;
             if (isClickInsideArea(position, _sideBarAreaKey)) {
-              _vm.exitSearchState();
+              _searchVM.exitSearchState();
               return;
             }
             if (!widgetState.isClickInsideTextField(position) || !isClickInsideArea(position, _titleSearchPanelKey)) {
               if (showSearchPage) {
-                _vm.hideSearchPanel();
+                _searchVM.hideSearchPanel();
               }else {
-                _vm.exitSearchState();
+                _searchVM.exitSearchState();
               }
             }
           },
@@ -120,7 +122,7 @@ class _MainPageState extends ConsumerState<MainPage> with WindowListener{
                                     ),
                                     Expanded(child: AnimatedContainer(
                                       duration: const Duration(milliseconds: 300),
-                                        child: showPanel ? const SizedBox.shrink() : _buildTitleHead(widget.path))),
+                                        child: isSearchState ? const SizedBox.shrink() : _buildTitleHead(widget.path))),
                                     KeyedSubtree(
                                       key: _windowControlsKey,
                                       child: Platform.isMacOS ? const SizedBox.shrink() : WindowControlsBar(),)

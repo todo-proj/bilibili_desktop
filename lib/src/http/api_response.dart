@@ -5,13 +5,16 @@ part 'api_response.g.dart';
 @JsonSerializable(genericArgumentFactories: true)
 class ApiResponse<T> {
   final int code;
+  @JsonKey(defaultValue: '')
   final String message;
   final T? data;
+  final T? result;
 
   ApiResponse({
     required this.code,
     required this.message,
     this.data,
+    this.result,
   });
 
   factory ApiResponse.fromJson(

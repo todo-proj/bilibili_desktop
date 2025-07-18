@@ -1,9 +1,7 @@
 import 'package:bilibili_desktop/src/business/main/side_bar_item.dart';
 import 'package:bilibili_desktop/src/business/user/user_center.dart';
-import 'package:bilibili_desktop/src/providers/api_provider.dart';
 import 'package:bilibili_desktop/src/providers/router/main_route.dart';
 import 'package:bilibili_desktop/src/providers/theme/themes_provider.dart';
-import 'package:bilibili_desktop/src/utils/wbi_check_util.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -51,49 +49,23 @@ class MainViewModel extends _$MainViewModel {
   void refreshSideBar() {
     state = state.copyWith(sideBarItems: _generateSideBarItems());
   }
-
-  void enterSearchState() {
-    state = state.copyWith(showSearchPanel: true, isSearchState: true);
-  }
-
-  void exitSearchState() {
-    state = state.copyWith(showSearchPanel: false, isSearchState: false);
-  }
-
-  void hideSearchPanel() {
-    state = state.copyWith(showSearchPanel: false);
-  }
-
-  void showSearchPanel() {
-    state = state.copyWith(showSearchPanel: true);
-  }
 }
 
 class MainPageState extends Equatable{
   final List<SideBarItem> sideBarItems;
-  // 搜索框移动到中间
-  final bool isSearchState;
-  // 搜索历史和热搜 panel
-  final bool showSearchPanel;
   const MainPageState({
     required this.sideBarItems,
-    this.isSearchState = false,
-    this.showSearchPanel = false,
   });
 
   copyWith({
     List<SideBarItem>? sideBarItems,
-    bool? showSearchPanel,
-    bool? isSearchState,
   })
   {
     return MainPageState(
       sideBarItems: sideBarItems ?? this.sideBarItems,
-      showSearchPanel: showSearchPanel ?? this.showSearchPanel,
-      isSearchState: isSearchState ?? this.isSearchState,
     );
   }
   @override
-  List<Object?> get props => [sideBarItems, showSearchPanel, isSearchState];
+  List<Object?> get props => [sideBarItems];
 }
 

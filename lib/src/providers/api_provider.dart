@@ -36,12 +36,24 @@ final loginProvider = Provider((ref) async {
   );
 });
 
+final searchApiProvider = Provider((ref) async {
+  final dio = (await NetworkManager.instance).dio;
+  return ApiService(dio,
+    baseUrl: 'https://s.search.bilibili.com/main/',
+  );
+});
+
 extension ApiProvider<T> on Future<ApiResponse<T>> {
   Future<T> handle() async {
     try {
       final response = await this;
       if (response.isSuccess) {
-        return response.data!;
+        if (response.data != null) {
+          return response.data!;
+        }else if (response.result != null) {
+          return response.result!;
+        }
+        throw Exception('参数都为null');
       } else {
         L.e("api error: ${response.message}");
         throw Exception(response.message);

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bilibili_desktop/src/business/main/main_view_model.dart';
 import 'package:bilibili_desktop/src/business/main/side_bar_item.dart';
+import 'package:bilibili_desktop/src/business/multi_window.dart';
 import 'package:bilibili_desktop/src/business/user/user_center.dart';
 import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/providers/router/main_route.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:window_manager/window_manager.dart';
 
 class SideBar extends ConsumerStatefulWidget {
   const SideBar({super.key});
@@ -44,7 +46,11 @@ class _SideBarState extends ConsumerState<SideBar> {
               color: Colors.grey,
               borderRadius: BorderRadius.circular(6),
             ),
-            child: Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+            child: GestureDetector(
+              onTap: () {
+                showSubWindow();
+              },
+                child: Icon(Icons.arrow_back_ios_new_rounded, size: 20)),
           ),
           10.hSize,
           ...List.generate(items.length, (index) {

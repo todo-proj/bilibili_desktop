@@ -1,6 +1,7 @@
+import 'dart:convert';
+
 import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/providers/router/root_route.dart';
-import 'package:bilibili_desktop/src/providers/router/router_history.dart';
 import 'package:bilibili_desktop/src/providers/theme/themes_provider.dart';
 import 'package:bilibili_desktop/src/utils/app_storage.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +9,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'src/business/sub_window/sub_window_app.dart';
 import 'src/providers/theme/themes.dart';
 
 
-void main() async{
+void main(List<String> args) async{
+  if (args.isNotEmpty) {
+    final windowId = int.parse(args[1]);
+    final argument = args[2].isEmpty
+        ? const {}
+        : jsonDecode(args[2]) as Map<String, dynamic>;
+    runApp(SubWindowApp(windowId));
+    return;
+  }
   MediaKit.ensureInitialized();
   WidgetsFlutterBinding.ensureInitialized();
   await AppStorage.init();

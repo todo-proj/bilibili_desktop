@@ -1,4 +1,6 @@
 PODS:
+  - desktop_multi_window (0.0.1):
+    - FlutterMacOS
   - FlutterMacOS (1.0.0)
   - media_kit_libs_macos_video (1.0.4):
     - FlutterMacOS
@@ -25,6 +27,7 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
+  - desktop_multi_window (from `Flutter/ephemeral/.symlinks/plugins/desktop_multi_window/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - media_kit_libs_macos_video (from `Flutter/ephemeral/.symlinks/plugins/media_kit_libs_macos_video/macos`)
   - media_kit_video (from `Flutter/ephemeral/.symlinks/plugins/media_kit_video/macos`)
@@ -38,6 +41,8 @@ DEPENDENCIES:
   - window_manager (from `Flutter/ephemeral/.symlinks/plugins/window_manager/macos`)
 
 EXTERNAL SOURCES:
+  desktop_multi_window:
+    :path: Flutter/ephemeral/.symlinks/plugins/desktop_multi_window/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
   media_kit_libs_macos_video:
@@ -62,6 +67,7 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/window_manager/macos
 
 SPEC CHECKSUMS:
+  desktop_multi_window: 93667594ccc4b88d91a97972fd3b1b89667fa80a
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   media_kit_libs_macos_video: 85a23e549b5f480e72cae3e5634b5514bc692f65
   media_kit_video: fa6564e3799a0a28bff39442334817088b7ca758

@@ -1,5 +1,4 @@
 import 'package:bilibili_desktop/src/business/common/widget/common_tab_bar.dart';
-import 'package:bilibili_desktop/src/business/sub_window/video/state.dart';
 import 'package:bilibili_desktop/src/providers/api_provider.dart';
 import 'package:bilibili_desktop/src/utils/logger.dart';
 import 'package:bilibili_desktop/src/utils/wbi_check_util.dart';
@@ -7,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import 'state.dart';
 
 part 'video_view_model.g.dart';
 

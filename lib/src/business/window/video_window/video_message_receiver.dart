@@ -1,11 +1,9 @@
-import 'package:bilibili_desktop/src/business/sub_window/video/video_view_model.dart';
+import 'package:bilibili_desktop/src/business/window/video_window/video/video_view_model.dart';
+import 'package:bilibili_desktop/src/business/window/window_method.dart';
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import 'video_window_method.dart';
-
 
 part 'video_message_receiver.g.dart';
 
@@ -13,6 +11,9 @@ part 'video_message_receiver.g.dart';
 class VideoMessageReceiver extends _$VideoMessageReceiver {
   @override
   VideoMessageReceiverState build(ThemeMode mode) {
+    ref.onDispose(() {
+      DesktopMultiWindow.setMethodHandler(null);
+    });
     register();
     return VideoMessageReceiverState(mode: mode);
   }
@@ -27,11 +28,11 @@ class VideoMessageReceiver extends _$VideoMessageReceiver {
       final method = call.method;
       debugPrint("fromWindowId: $fromWindowId, method: $method, args: $args");
       switch (method) {
-        case VideoWindowMethod.changeThemeMethod:
+        case WindowMethod.changeThemeMethod:
           final dark = args["dark"];
           state = state.copyWith(mode: dark ? ThemeMode.dark : ThemeMode.light);
           break;
-        case VideoWindowMethod.changeVideoMethod:
+        case WindowMethod.changeVideoMethod:
           final cid = args["cid"];
           final bvid = args["bvid"];
           final mid = args["mid"];

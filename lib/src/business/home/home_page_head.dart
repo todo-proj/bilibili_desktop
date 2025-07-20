@@ -24,7 +24,8 @@ class _HomePageHeadState extends ConsumerState<HomePageHead> {
   @override
   Widget build(BuildContext context) {
     final items = ref.read(homeViewModelProvider.select((e)=>e.items));
-    return CommonTabBar(items: items, initialIndex: 1, onTap: (index, item) {
+    final currentIndex = ref.read(homeViewModelProvider.select((e)=>e.currentIndex));
+    return CommonTabBar(items: items, initialIndex: currentIndex, onTap: (index, item) {
       _viewModel.changeTab(item.tag);
     });
   }

@@ -1,19 +1,18 @@
 import 'dart:io';
 
 import 'package:bilibili_desktop/src/business/common/widget/common_tab_bar.dart';
+import 'package:bilibili_desktop/src/business/common/widget/common_widget.dart';
 import 'package:bilibili_desktop/src/business/common/window_control_area.dart';
 import 'package:bilibili_desktop/src/business/main/window_control_bar.dart';
-import 'package:bilibili_desktop/src/business/sub_window/event_widget.dart';
-import 'package:bilibili_desktop/src/business/sub_window/video/video_page_intro.dart';
-import 'package:bilibili_desktop/src/business/sub_window/video/video_view_model.dart';
-import 'package:bilibili_desktop/src/business/sub_window/video_message_sender.dart';
+import 'package:bilibili_desktop/src/business/window/sub_to_main_message_sender.dart';
 import 'package:bilibili_desktop/src/utils/widget_util.dart';
-import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
 import 'video_page_comment.dart';
+import 'video_page_intro.dart';
+import 'video_view_model.dart';
 
 class VideoPage extends ConsumerStatefulWidget {
   final String cid;
@@ -54,13 +53,28 @@ class _VideoPageState extends ConsumerState<VideoPage> {
             color: Colors.black87,
             width: double.infinity,
             height: 50,
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: DoubleTapMaximizeArea(
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   spacing: 40,
                   children: [
+                    SizedBox(
+                      height: 30,
+                      child: hoverButton(context, child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                        child: Row(
+                          children: [
+                            Icon(Icons.home_rounded, size: 20),
+                            Text('回到主界面', style: TextStyle(fontSize: 12),),
+                          ],
+                        ),
+                      ),onPressed: (){
+                        SubWindowToMainWindowMessageSender.showMainWindow();
+                      }),
+                    ),
+                    Spacer(),
                     Platform.isMacOS ? const SizedBox.shrink() : WindowControlsBar()
                   ],
                 ),

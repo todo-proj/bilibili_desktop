@@ -1,7 +1,7 @@
 import 'package:bilibili_desktop/src/business/common/reesponsive_grid_delegate.dart';
 import 'package:bilibili_desktop/src/business/common/widget/common_widget.dart';
 import 'package:bilibili_desktop/src/business/home/recommend/home_recommend_view_model.dart';
-import 'package:bilibili_desktop/src/business/sub_window/video_window_manager.dart';
+import 'package:bilibili_desktop/src/business/window/sub_window_manager.dart';
 import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/http/model/recommend_video_model.dart'
     show Item;
@@ -32,7 +32,6 @@ class _HomeRecommendPageState extends ConsumerState<HomeRecommendPage> {
       final loading = ref.read(
         homeRecommendViewModelProvider.select((e) => e.loading),
       );
-      debugPrint("scrollController.position.pixels: ${_scrollController.position.pixels}, $loading");
       if (_scrollController.position.pixels >=
               _scrollController.position.maxScrollExtent &&
           !loading) {
@@ -95,8 +94,7 @@ class _HomeRecommendPageState extends ConsumerState<HomeRecommendPage> {
   Widget _buildItem(BuildContext context, Item item) {
     return GestureDetector(
       onTap: () {
-        // context.push(RootRoute.video, extra: item);
-        VideoWindowManager.openVideo(ref, item.cid, item.bvid, item.owner.mid);
+        SubWindowManager.instance.getVideoWindowController().openVideo(item.cid, item.bvid, item.owner.mid);
       },
       child: Container(
         decoration: BoxDecoration(),
@@ -108,7 +106,7 @@ class _HomeRecommendPageState extends ConsumerState<HomeRecommendPage> {
               aspectRatio: 16 / 9,
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: CachedNetworkImage(imageUrl: item.pic, fit: BoxFit.cover,)),
+                  child: CachedNetworkImage(imageUrl: item.pic, fit: BoxFit.cover, key: ValueKey(item.pic),)),
             ),
             SizedBox(
               height: 40,

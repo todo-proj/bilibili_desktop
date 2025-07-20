@@ -16,7 +16,7 @@ class HomePageType {
 class HomeViewModel extends _$HomeViewModel {
   @override
   HomePageState build() {
-    return HomePageState(items: _generateTabBarItems(), currentTag: HomePageType.recommend, initialIndex: 1, currentIndex: 1);
+    return HomePageState(items: _generateTabBarItems(), currentTag: HomePageType.recommend, currentIndex: 1);
   }
 
   List<TabBarItem> _generateTabBarItems() {
@@ -38,13 +38,11 @@ class HomeViewModel extends _$HomeViewModel {
 class HomePageState extends Equatable {
   final List<TabBarItem> items;
   final String currentTag;
-  final int initialIndex;
   final int currentIndex;
 
   const HomePageState({
     required this.items,
     required this.currentTag,
-    required this.initialIndex,
     required this.currentIndex,
   });
 
@@ -52,18 +50,16 @@ class HomePageState extends Equatable {
   copyWith({
     List<TabBarItem>? items,
     String? currentTag,
-    int? initialIndex,
     int? currentIndex,
   }) {
     return HomePageState(
       items: items ?? this.items,
       currentTag: currentTag ?? this.currentTag,
-      initialIndex: initialIndex ?? this.initialIndex,
       currentIndex: currentIndex ?? this.currentIndex,
     );
   }
 
   @override
-  List<Object?> get props => [items, currentTag, initialIndex, currentIndex];
+  List<Object?> get props => [items, currentTag, currentIndex];
 
 }

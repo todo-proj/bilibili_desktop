@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:bilibili_desktop/src/business/sub_window/video_window_manager.dart';
+import 'package:bilibili_desktop/src/business/window/video_window/video_window_app.dart';
 import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/providers/router/root_route.dart';
 import 'package:bilibili_desktop/src/providers/theme/themes_provider.dart';
@@ -9,8 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:window_manager/window_manager.dart';
-
-import 'src/business/sub_window/sub_window_app.dart';
 import 'src/providers/theme/themes.dart';
 
 
@@ -38,7 +36,7 @@ void runMainApp() async{
     await windowManager.show();
     await windowManager.focus();
   });
-  VideoWindowManager.init();
+
   runApp(ProviderScope(child: const App()));
 }
 

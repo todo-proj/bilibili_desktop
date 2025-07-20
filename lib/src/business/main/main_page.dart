@@ -5,7 +5,6 @@ import 'package:bilibili_desktop/src/business/main/main_view_model.dart';
 import 'package:bilibili_desktop/src/business/main/search/search_view_model.dart';
 import 'package:bilibili_desktop/src/business/main/search/title_search_panel.dart';
 import 'package:bilibili_desktop/src/business/main/window_control_bar.dart';
-import 'package:bilibili_desktop/src/business/sub_window/video_message_receiver.dart';
 import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/providers/router/main_route.dart';
 import 'package:bilibili_desktop/src/providers/router/router_history.dart';
@@ -13,13 +12,14 @@ import 'package:bilibili_desktop/src/utils/widget_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../common/window_control_area.dart';
 import 'side_bar.dart';
 
 class MainPage extends ConsumerStatefulWidget {
-  final Widget child;
+  final StatefulNavigationShell child;
   final String? path;
 
   const MainPage({super.key, required this.child, this.path});

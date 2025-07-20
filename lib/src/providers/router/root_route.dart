@@ -43,7 +43,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       return Scaffold(
         body: GestureDetector(
           onTap: () {
-            context.go(MainRoute.main);
+            context.go(MainRoute.home);
           },
           child: Center(child: Text('404 - Page Not Found: ${state.error}')),
         ),

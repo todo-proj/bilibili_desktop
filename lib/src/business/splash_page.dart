@@ -18,7 +18,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   Widget build(BuildContext context) {
     ref.listen(splashViewModelProvider, (prev, next) {
       if (next.checkLogin) {
-        context.go(MainRoute.main);
+        context.go(MainRoute.home);
       }
     });
     return Scaffold(

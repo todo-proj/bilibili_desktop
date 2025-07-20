@@ -1,7 +1,8 @@
-import 'package:bilibili_desktop/src/business/sub_window/video/video_page.dart';
-import 'package:bilibili_desktop/src/business/sub_window/video/video_view_model.dart';
-import 'package:bilibili_desktop/src/business/sub_window/video_message_receiver.dart';
-import 'package:bilibili_desktop/src/business/sub_window/video_message_sender.dart';
+import 'package:bilibili_desktop/src/business/window/sub_to_main_message_sender.dart';
+import 'package:bilibili_desktop/src/business/window/sub_window_type.dart';
+import 'package:bilibili_desktop/src/business/window/video_window/video/video_page.dart';
+import 'package:bilibili_desktop/src/business/window/video_window/video/video_view_model.dart';
+import 'package:bilibili_desktop/src/business/window/video_window/video_message_receiver.dart';
 import 'package:bilibili_desktop/src/providers/theme/themes.dart';
 import 'package:bilibili_desktop/src/utils/wbi_check_util.dart';
 import 'package:flutter/material.dart';
@@ -53,9 +54,15 @@ class _VideoWindowAppState extends ConsumerState<VideoWindowApp> with WindowList
   }
 
   @override
-  void onWindowClose() {
+  void onWindowClose() async{
     ref.read(videoViewModelProvider.notifier).player.dispose();
   }
+
+  @override
+  void onWindowFocus() {
+    debugPrint("onWindowFocus");
+  }
+
 }
 
 void prepareVideoWindowParams(dynamic argument) async{

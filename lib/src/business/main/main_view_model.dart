@@ -1,10 +1,15 @@
 import 'package:bilibili_desktop/src/business/main/side_bar_item.dart';
 import 'package:bilibili_desktop/src/business/user/user_center.dart';
+import 'package:bilibili_desktop/src/business/window/sub_window_manager.dart';
+import 'package:bilibili_desktop/src/business/window/sub_window_type.dart';
+import 'package:bilibili_desktop/src/business/window/window_method.dart';
 import 'package:bilibili_desktop/src/providers/router/main_route.dart';
 import 'package:bilibili_desktop/src/providers/theme/themes_provider.dart';
+import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:window_manager/window_manager.dart';
 
 part 'main_view_model.g.dart';
 
@@ -12,6 +17,7 @@ part 'main_view_model.g.dart';
 class MainViewModel extends _$MainViewModel {
   @override
   MainPageState build(){
+    registerWindowMessageReceiver();
     return MainPageState(sideBarItems: _generateSideBarItems());
   }
 
@@ -48,6 +54,24 @@ class MainViewModel extends _$MainViewModel {
 
   void refreshSideBar() {
     state = state.copyWith(sideBarItems: _generateSideBarItems());
+  }
+
+  void registerWindowMessageReceiver() {
+    DesktopMultiWindow.setMethodHandler((call, fromWindowId) async {
+      final args = call.arguments;
+      final method = call.method;
+      debugPrint("fromWindowId: $fromWindowId, method: $method, args: $args");
+      switch (method) {
+        case WindowMethod.onSubWindowCloseMethod:
+          final type = args["type"];
+          final windowType = SubWindowType.fromString(type);
+          SubWindowManager.instance.getSubWindowController(windowType)?.onCloseWindow();
+          break;
+        case WindowMethod.showMainWindowMethod:
+          windowManager.show();
+          break;
+      }
+    });
   }
 }
 

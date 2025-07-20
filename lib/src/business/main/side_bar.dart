@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:bilibili_desktop/src/business/main/main_view_model.dart';
 import 'package:bilibili_desktop/src/business/main/side_bar_item.dart';
-import 'package:bilibili_desktop/src/business/multi_window.dart';
+import 'package:bilibili_desktop/src/business/sub_window/video_message_sender.dart';
+import 'package:bilibili_desktop/src/business/sub_window/video_window_manager.dart';
 import 'package:bilibili_desktop/src/business/user/user_center.dart';
 import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/providers/router/main_route.dart';
@@ -48,7 +49,7 @@ class _SideBarState extends ConsumerState<SideBar> {
             ),
             child: GestureDetector(
               onTap: () {
-                showSubWindow();
+
               },
                 child: Icon(Icons.arrow_back_ios_new_rounded, size: 20)),
           ),

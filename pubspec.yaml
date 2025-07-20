@@ -55,6 +55,7 @@ dependencies:
   path: ^1.9.1
   flutter_svg: ^2.2.0
   crypto: ^3.0.2
+  # https://github.com/MixinNetwork/flutter-plugins/issues/58 这个可以解决子窗口native插件未注册的问题
   desktop_multi_window: ^0.2.1
 
 dev_dependencies:

@@ -1,5 +1,5 @@
 import 'package:bilibili_desktop/src/business/common/widget/common_tab_bar.dart';
-import 'package:bilibili_desktop/src/business/video/state.dart';
+import 'package:bilibili_desktop/src/business/sub_window/video/state.dart';
 import 'package:bilibili_desktop/src/providers/api_provider.dart';
 import 'package:bilibili_desktop/src/utils/logger.dart';
 import 'package:bilibili_desktop/src/utils/wbi_check_util.dart';
@@ -29,6 +29,7 @@ class VideoViewModel extends _$VideoViewModel {
       selectedItemIndex: 0,
     );
   }
+
 
   void getVideoInfo(String bvid, String cid, String mid) async {
     final api = await ref.read(apiProvider);

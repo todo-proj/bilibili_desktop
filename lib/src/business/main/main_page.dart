@@ -5,6 +5,7 @@ import 'package:bilibili_desktop/src/business/main/main_view_model.dart';
 import 'package:bilibili_desktop/src/business/main/search/search_view_model.dart';
 import 'package:bilibili_desktop/src/business/main/search/title_search_panel.dart';
 import 'package:bilibili_desktop/src/business/main/window_control_bar.dart';
+import 'package:bilibili_desktop/src/business/sub_window/video_message_receiver.dart';
 import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/providers/router/main_route.dart';
 import 'package:bilibili_desktop/src/providers/router/router_history.dart';

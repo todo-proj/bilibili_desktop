@@ -54,7 +54,6 @@ class _WindowControlsBarState extends State<WindowControlsBar> {
     return IconButton(
       onPressed: onPressed,
       icon: icon,
-      style: IconButton.styleFrom(foregroundColor: Colors.black),
     );
   }
 }

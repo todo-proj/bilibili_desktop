@@ -19,6 +19,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   void initState() {
     super.initState();
     _viewModel = ref.read(homeViewModelProvider.notifier);
+    debugPrint('HomePage initState');
   }
 
   @override

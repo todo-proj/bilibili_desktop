@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bilibili_desktop/src/business/sub_window/video_window_manager.dart';
 import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/providers/router/root_route.dart';
 import 'package:bilibili_desktop/src/providers/theme/themes_provider.dart';
@@ -15,14 +16,13 @@ import 'src/providers/theme/themes.dart';
 
 void main(List<String> args) async{
   if (args.isNotEmpty) {
-    final windowId = int.parse(args[1]);
-    final argument = args[2].isEmpty
-        ? const {}
-        : jsonDecode(args[2]) as Map<String, dynamic>;
-    runApp(SubWindowApp(windowId));
+    runSubApp(args);
     return;
   }
-  MediaKit.ensureInitialized();
+  runMainApp();
+}
+
+void runMainApp() async{
   WidgetsFlutterBinding.ensureInitialized();
   await AppStorage.init();
   await windowManager.ensureInitialized();
@@ -38,7 +38,34 @@ void main(List<String> args) async{
     await windowManager.show();
     await windowManager.focus();
   });
+  VideoWindowManager.init();
   runApp(ProviderScope(child: const App()));
+}
+
+
+void runSubApp(List<String> args) async{
+  final windowId = int.parse(args[1]);
+  final argument = args[2].isEmpty
+      ? const {}
+      : jsonDecode(args[2]) as Map<String, dynamic>;
+
+  prepareVideoWindowParams(argument);
+  MediaKit.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
+  WindowOptions windowOptions = WindowOptions(
+    size: Size(WindowConfig.windowWidth, WindowConfig.windowHeight),
+    minimumSize: Size(WindowConfig.windowMinWidth, WindowConfig.windowMinHeight),
+    center: true,
+    backgroundColor: Colors.transparent,
+    skipTaskbar: false,
+    titleBarStyle: TitleBarStyle.hidden,
+  );
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
+  runApp(ProviderScope(child: VideoWindowApp(windowId, argument)));
 }
 
 class App extends ConsumerWidget {

@@ -1,20 +1,21 @@
 import 'dart:convert';
 import 'dart:collection';
 import 'package:crypto/crypto.dart';
+import 'package:flutter/cupertino.dart';
 
 class WbiCheckUtil {
   static final md5Hash = md5;
 
-  static String _imgKey = "";
-  static String _subKey = "";
+  static String imgKey = "";
+  static String subKey = "";
 
-  static void injectKey(String imgKey, String subKey) {
-    _imgKey = imgKey.split('/').last.split('.').first;
-    _subKey = subKey.split('/').last.split('.').first;
+  static void injectKey(String img, String sub) {
+    imgKey = img.split('/').last.split('.').first;
+    subKey = sub.split('/').last.split('.').first;
   }
 
   static Map<String, dynamic> generateWbiParams(Map<String, dynamic> params) {
-    final mixinKey = getMixinKey(_imgKey, _subKey);
+    final mixinKey = getMixinKey(imgKey, subKey);
 
     final map = SplayTreeMap<String, dynamic>(); // 自动按 key 排序
     map.addAll(params);
@@ -31,6 +32,7 @@ class WbiCheckUtil {
       "wts" : date,
       "w_rid" : wbiSign
     });
+    debugPrint("wbiSign: $imgKey, $subKey");
     return result;
   }
 

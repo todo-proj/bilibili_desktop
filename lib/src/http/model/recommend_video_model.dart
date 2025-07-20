@@ -14,8 +14,6 @@ class RecommendVideoModel {
   dynamic businessCard;
   dynamic floorInfo;
   dynamic userFeature;
-  double preloadExposePct;
-  double preloadFloorExposePct;
   int mid;
 
   RecommendVideoModel({
@@ -23,18 +21,14 @@ class RecommendVideoModel {
     required this.businessCard,
     required this.floorInfo,
     required this.userFeature,
-    required this.preloadExposePct,
-    required this.preloadFloorExposePct,
     required this.mid,
   });
 
   factory RecommendVideoModel.fromJson(Map<String, dynamic> json) => RecommendVideoModel(
-    item: List<Item>.from(json["item"].map((x) => Item.fromJson(x))),
+    item: List<Item>.from(json["item"].where((x) => x['id'] != 0).map((x) => Item.fromJson(x))),
     businessCard: json["business_card"],
     floorInfo: json["floor_info"],
     userFeature: json["user_feature"],
-    preloadExposePct: json["preload_expose_pct"],
-    preloadFloorExposePct: json["preload_floor_expose_pct"],
     mid: json["mid"],
   );
 
@@ -43,8 +37,6 @@ class RecommendVideoModel {
     "business_card": businessCard,
     "floor_info": floorInfo,
     "user_feature": userFeature,
-    "preload_expose_pct": preloadExposePct,
-    "preload_floor_expose_pct": preloadFloorExposePct,
     "mid": mid,
   };
 }

@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:bilibili_desktop/src/business/common/widget/common_tab_bar.dart';
 import 'package:bilibili_desktop/src/business/common/window_control_area.dart';
-import 'package:bilibili_desktop/src/business/video/video_page_intro.dart';
-import 'package:bilibili_desktop/src/business/video/video_view_model.dart';
-import 'package:bilibili_desktop/src/config/window_config.dart';
+import 'package:bilibili_desktop/src/business/main/window_control_bar.dart';
+import 'package:bilibili_desktop/src/business/sub_window/event_widget.dart';
+import 'package:bilibili_desktop/src/business/sub_window/video/video_page_intro.dart';
+import 'package:bilibili_desktop/src/business/sub_window/video/video_view_model.dart';
+import 'package:bilibili_desktop/src/business/sub_window/video_message_sender.dart';
 import 'package:bilibili_desktop/src/utils/widget_util.dart';
+import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
 import 'video_page_comment.dart';
@@ -51,23 +55,15 @@ class _VideoPageState extends ConsumerState<VideoPage> {
             width: double.infinity,
             height: 50,
             child: DoubleTapMaximizeArea(
-              child: Stack(
-                children: [
-                  Positioned(
-                    left: 10,
-                    top: 10,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Icon(
-                        Icons.arrow_back_ios_new,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  spacing: 40,
+                  children: [
+                    Platform.isMacOS ? const SizedBox.shrink() : WindowControlsBar()
+                  ],
+                ),
               ),
             ),
           ),

@@ -23,6 +23,7 @@ class _DoubleTapMaximizeAreaState extends State<DoubleTapMaximizeArea> {
   Widget build(BuildContext context) {
     return Listener(
       onPointerDown: _handlePointerDown,
+      onPointerMove: _handlePointerMove, // 添加拖拽事件
       behavior: HitTestBehavior.translucent,
       child: _shouldInterceptEvents
           ? AbsorbPointer(child: widget.child)
@@ -48,6 +49,13 @@ class _DoubleTapMaximizeAreaState extends State<DoubleTapMaximizeArea> {
       });
       _handleDoubleTap();
     }
+  }
+
+  void _handlePointerMove(PointerMoveEvent event) {
+    if (_shouldInterceptEvents) return; // 如果正在处理双击，跳过拖动
+
+    // 调用 window_manager 实现窗口拖动
+    windowManager.startDragging();
   }
 
   void _handleDoubleTap() async {

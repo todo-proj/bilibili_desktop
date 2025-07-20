@@ -1,13 +1,10 @@
 import 'dart:async';
-
-import 'package:bilibili_desktop/src/business/common/event_dispatcher_mixin.dart';
 import 'package:bilibili_desktop/src/business/common/view_state/view_state.dart';
-import 'package:bilibili_desktop/src/business/user/user_center.dart';
 import 'package:bilibili_desktop/src/providers/api_provider.dart';
+import 'package:bilibili_desktop/src/utils/logger.dart';
 import 'package:equatable/equatable.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../utils/logger.dart' show logger;
 
 part 'login_view_model.g.dart';
 
@@ -55,7 +52,7 @@ class LoginViewModel extends _$LoginViewModel {
     _qrCodeCheckTimer = Timer.periodic(const Duration(seconds: 3), (timer) async {
       final api = await ref.read(loginProvider);
       try {
-        final data = await api.checkCode(state.data?.qrcodeKey ?? '').handle();
+        final data = await api.checkCode(state.data?.qrcodeKey ?? '');
         if (!data.isSuccess) return;
         final code = data.data['code'];
         if (code == 0) {
@@ -69,8 +66,9 @@ class LoginViewModel extends _$LoginViewModel {
           //已扫码未确认
           state = state.successState(state.data?.copyWith(waitingConfirm: true));
         }
-      }catch (e) {
+      }catch (e,s) {
         timer.cancel();
+        L.e(e,stackTrace: s);
         state = state.errorState(errorMessage: e.toString());
       }
     });

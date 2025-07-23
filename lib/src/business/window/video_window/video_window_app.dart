@@ -1,5 +1,5 @@
-import 'package:bilibili_desktop/src/business/window/sub_to_main_message_sender.dart';
-import 'package:bilibili_desktop/src/business/window/sub_window_type.dart';
+import 'dart:io';
+
 import 'package:bilibili_desktop/src/business/window/video_window/video/video_page.dart';
 import 'package:bilibili_desktop/src/business/window/video_window/video/video_view_model.dart';
 import 'package:bilibili_desktop/src/business/window/video_window/video_message_receiver.dart';
@@ -55,7 +55,12 @@ class _VideoWindowAppState extends ConsumerState<VideoWindowApp> with WindowList
 
   @override
   void onWindowClose() async{
-    ref.read(videoViewModelProvider.notifier).player.dispose();
+    final videoViewModel = ref.read(videoViewModelProvider.notifier);
+    if (Platform.isMacOS) {
+      videoViewModel.player.stop();
+    }else {
+      videoViewModel.player.dispose();
+    }
   }
 
   @override

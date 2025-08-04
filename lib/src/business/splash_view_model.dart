@@ -23,7 +23,7 @@ class SplashViewModel extends _$SplashViewModel {
 
   void checkLogin() async {
     try {
-      final api = await ref.read(apiProvider);
+      final api = ref.read(apiProvider);
       final account = await api.getAccount();
       final Map<String, String> wbi = {};
       if (account.isSuccess) {
@@ -36,7 +36,7 @@ class SplashViewModel extends _$SplashViewModel {
         WbiCheckUtil.injectKey(wbiImg.imgUrl, wbiImg.subUrl);
       }
       final fingerprint = await api.getFingerprint().handle();
-      final cookieJar = (await NetworkManager.instance).cookieJar;
+      final cookieJar = NetworkManager.instance.cookieJar;
       cookieJar.saveFromResponse(Uri.http('api.bilibili.com'), [
         Cookie('buvid3', fingerprint['b_3'] ?? ''),
         Cookie('buvid4', fingerprint['b_4'] ?? ''),

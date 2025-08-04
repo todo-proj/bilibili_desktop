@@ -13,6 +13,7 @@ class Themes {
         refreshButtonColor: Colors.white,
         refreshButtonHoverColor: Colors.grey,
         hoverColor: Color(0XFFC7356A),
+        directMessageBackground: Colors.white
       ),
     ],
     colorScheme: ColorScheme.light(surface: lightColor, onSurface: darkColor, surfaceContainer: Color(0xFFEDEDED)),
@@ -46,6 +47,7 @@ class Themes {
         overlayColor: WidgetStateProperty.all(Colors.transparent),
       ),
     ),
+    iconTheme: IconThemeData(color: Colors.black),
     listTileTheme: const ListTileThemeData(iconColor: Colors.black),
     dividerColor: darkColor,
     tabBarTheme: TabBarThemeData(
@@ -88,6 +90,7 @@ class Themes {
         refreshButtonColor: Colors.grey,
         refreshButtonHoverColor: Colors.grey.withValues(alpha: 0.5),
         hoverColor: Color(0XFFC7356A),
+        directMessageBackground: Color(0xFF1E2022)
       ),
     ],
     colorScheme: ColorScheme.light(surface: darkColor, onSurface: lightColor, surfaceContainer: Color(0xFF1E2022)),
@@ -121,6 +124,7 @@ class Themes {
         overlayColor: WidgetStateProperty.all(Colors.transparent),
       ),
     ),
+    iconTheme: IconThemeData(color: Colors.white),
     listTileTheme: const ListTileThemeData(iconColor: Colors.white),
     dividerColor: lightColor,
     tabBarTheme: TabBarThemeData(

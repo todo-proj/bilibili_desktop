@@ -29,7 +29,8 @@ class _HomePageState extends ConsumerState<HomePage> {
       index: state.currentIndex,
       children: [
         HomeRecommendPage(),
-        HomeRecommendPage(),
+        // HomeRecommendPage(),
+        SizedBox.expand(),
         HomeRecommendPage(),
         HomeRecommendPage(),
         HomeRecommendPage(),

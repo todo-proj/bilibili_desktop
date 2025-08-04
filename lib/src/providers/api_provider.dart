@@ -24,24 +24,32 @@ Future<CookieJar> prepareJar() async {
   return jar;
 }
 
-final apiProvider = Provider((ref) async {
-  final dio = (await NetworkManager.instance).dio;
+final apiProvider = Provider((ref) {
+  final dio = NetworkManager.instance.dio;
   return ApiService(dio);
 });
 
-final loginProvider = Provider((ref) async {
-  final dio = (await NetworkManager.instance).dio;
+final loginProvider = Provider((ref) {
+  final dio = NetworkManager.instance.dio;
   return ApiService(dio,
     baseUrl: 'https://passport.bilibili.com/',
   );
 });
 
-final searchApiProvider = Provider((ref) async {
-  final dio = (await NetworkManager.instance).dio;
+final searchApiProvider = Provider((ref) {
+  final dio = NetworkManager.instance.dio;
   return ApiService(dio,
     baseUrl: 'https://s.search.bilibili.com/main/',
   );
 });
+
+final messageApiProvider = Provider((ref) {
+  final dio = NetworkManager.instance.dio;
+  return ApiService(dio,
+    baseUrl: 'https://api.vc.bilibili.com/',
+  );
+});
+
 
 extension ApiProvider<T> on Future<ApiResponse<T>> {
   Future<T> handle() async {
@@ -53,7 +61,7 @@ extension ApiProvider<T> on Future<ApiResponse<T>> {
         }else if (response.result != null) {
           return response.result!;
         }
-        throw Exception('参数都为null');
+        throw Exception('返回值都为null');
       } else {
         L.e("api error: ${response.message}");
         throw Exception(response.message);

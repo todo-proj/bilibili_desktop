@@ -72,7 +72,7 @@ class SearchViewModel extends _$SearchViewModel {
     emitToStream(OpenSearchPageEvent());
     _addSearchHistory(keyword);
     hideSearchPanel();
-    final api = await ref.read(apiProvider);
+    final api = ref.read(apiProvider);
     // webi验证
     final params = WbiCheckUtil.generateWbiParams({"keyword": keyword});
     Map<SearchType, SearchTabBarItem> searchItems = {};
@@ -119,7 +119,7 @@ class SearchViewModel extends _$SearchViewModel {
   }
 
   void getSearchSuggest(String content) async {
-    final api = await ref.read(searchApiProvider);
+    final api = ref.read(searchApiProvider);
     try {
       final result = await api.searchSuggest(content).then((value) {
         return ApiResponse<SearchSuggestModel>.fromJson(jsonDecode(value),
@@ -135,7 +135,7 @@ class SearchViewModel extends _$SearchViewModel {
   }
 
   void getSearchHotWord() async {
-    final api = await ref.read(apiProvider);
+    final api = ref.read(apiProvider);
     try {
       final result = await api.searchHot(10).handle();
       state = state.copyWith(hotWords: result.trending.list);

@@ -34,7 +34,7 @@ class _SideBarState extends ConsumerState<SideBar> {
 
     return Container(
       width: WindowConfig.sideBarWidth,
-      color: Colors.grey.withAlpha(111),
+      color: Colors.grey[800],
       child: Column(
         spacing: 10,
         children: [
@@ -70,6 +70,19 @@ class _SideBarState extends ConsumerState<SideBar> {
           _onTap(item);
         },
         icon: _buildItemZone(item),
+      );
+    }
+    if (item.tag == MainRoute.theme) {
+      // 切换模式时，私信面板不隐藏
+      return TapRegion(
+        groupId: MainRoute.directMessage,
+        child: IconButton(
+          isSelected: isSelected,
+          onPressed: () {
+            _onTap(item);
+          },
+          icon: Icon(item.icon),
+        ),
       );
     }
     if (item.icon != null && item.title != null) {
@@ -153,6 +166,10 @@ class _SideBarState extends ConsumerState<SideBar> {
         }else {
           context.push(RootRoute.login);
         }
+        break;
+      case MainRoute.directMessage:
+        // context.push(item.tag);
+        ref.read(mainViewModelProvider.notifier).openDirectMessage();
         break;
     }
     setState(() {

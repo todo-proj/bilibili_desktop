@@ -33,7 +33,7 @@ class VideoViewModel extends _$VideoViewModel {
 
 
   void getVideoInfo(String bvid, String cid, String mid) async {
-    final api = await ref.read(apiProvider);
+    final api = ref.read(apiProvider);
     try {
       final videoInfoRequest = api.videoInfo(bvid).handle();
       // 获取视频up信息

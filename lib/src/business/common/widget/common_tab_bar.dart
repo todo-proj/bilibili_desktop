@@ -123,4 +123,16 @@ class TabBarItem {
   final String? num;
 
   TabBarItem(this.title, this.tag, {this.num});
+
+  copyWith({
+    String? title,
+    String? tag,
+    String? num,
+  }) {
+    return TabBarItem(
+      title ?? this.title,
+      tag ?? this.tag,
+      num: num ?? this.num,
+    );
+  }
 }

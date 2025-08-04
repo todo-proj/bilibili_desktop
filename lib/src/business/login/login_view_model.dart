@@ -25,7 +25,7 @@ class LoginViewModel extends _$LoginViewModel {
   }
 
   void generateCode() async {
-    final api = await ref.read(loginProvider);
+    final api = ref.read(loginProvider);
     try {
       final data = await api.generateCode().handle();
       _createQrCodeExpiredTimer();
@@ -50,7 +50,7 @@ class LoginViewModel extends _$LoginViewModel {
 
   void _createQrCodeCheckTimer() {
     _qrCodeCheckTimer = Timer.periodic(const Duration(seconds: 3), (timer) async {
-      final api = await ref.read(loginProvider);
+      final api = ref.read(loginProvider);
       try {
         final data = await api.checkCode(state.data?.qrcodeKey ?? '');
         if (!data.isSuccess) return;

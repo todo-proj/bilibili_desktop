@@ -13,19 +13,17 @@ import 'network_config.dart';
 import 'network_exception.dart';
 
 class NetworkManager {
-  static NetworkManager? _instance;
-  late Dio _dio;
+  static final NetworkManager _instance = NetworkManager._internal();
+  late final Dio _dio;
   late CookieJar _cookieJar;
 
-  static Future<NetworkManager> get instance async {
-    _instance ??= await NetworkManager._internal();
-    return _instance!;
+  static NetworkManager get instance {
+    return _instance;
   }
 
-  static Future<NetworkManager> _internal() async {
+  static NetworkManager _internal() {
     final dio = Dio();
     final manager = NetworkManager._create(dio);
-    await manager._setupDioAsync(); // 异步配置
     return manager;
   }
 
@@ -34,7 +32,7 @@ class NetworkManager {
   Dio get dio => _dio;
   CookieJar get cookieJar => _cookieJar;
 
-  Future<void> _setupDioAsync() async {
+  Future<void> setupDioAsync() async {
     // 基础配置
     _dio.options = BaseOptions(
       baseUrl: NetworkConfig.baseUrl,
@@ -145,5 +143,10 @@ class NetworkManager {
   // 更新 BaseUrl
   void updateBaseUrl(String baseUrl) {
     _dio.options.baseUrl = baseUrl;
+  }
+  
+  Future<String> getToken() async{
+    final cookies = await cookieJar.loadForRequest(Uri.parse(NetworkConfig.baseUrl));
+    return cookies.firstWhere((element) => element.name == 'bili_jct', orElse: () => Cookie('', '')).value;
   }
 }

@@ -1,6 +1,8 @@
 import 'package:bilibili_desktop/src/business/common/dialog_page.dart';
 import 'package:bilibili_desktop/src/business/login/login_page.dart';
+import 'package:bilibili_desktop/src/business/message/direct_message_page.dart';
 import 'package:bilibili_desktop/src/business/splash_page.dart';
+import 'package:bilibili_desktop/src/business/user/user_center.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -31,13 +33,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         ),
       ),
       ref.read(mainRouteProvider),
-      // GoRoute(
-      //   path: RootRoute.video,
-      //   builder: (context, state) {
-      //     Item item = state.extra as Item;
-      //     return VideoPage(cid: item.cid, bvid: item.bvid, mid: item.owner.mid.toString(),);
-      //   },
-      // ),
     ],
     errorBuilder: (context, state) {
       return Scaffold(
@@ -51,3 +46,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     },
   );
 });
+
+
+// 统一的转场动画构建函数
+Page buildPageWithTransition(Widget child, GoRouterState state) {
+  return CustomTransitionPage(
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(opacity: animation, child: child);
+    },
+  );
+}
+
+String? redirect(Ref ref, GoRouterState state) {
+  if (ref.read(userCenterProviderProvider.notifier).checkLogin()) {
+    return null;
+  }
+  return RootRoute.login;
+}

@@ -23,4 +23,8 @@ class WindowConfig {
   static double calculateSearchPanelOffset(double windowWidth) {
     return 1 - 2 * windowControlWidth / (windowWidth - sideBarWidth - searchPanelWidth - systemTitleBarPaddingHorizontal * 2 - searchPanelHeightPaddingHorizontal);
   }
+
+  //私信面板宽度
+  static const double directMessageWidth = 420;
+
 }

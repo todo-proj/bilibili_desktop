@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bilibili_desktop/src/business/window/video_window/video_window_app.dart';
 import 'package:bilibili_desktop/src/config/window_config.dart';
+import 'package:bilibili_desktop/src/http/network_manager.dart';
 import 'package:bilibili_desktop/src/providers/router/root_route.dart';
 import 'package:bilibili_desktop/src/providers/theme/themes_provider.dart';
 import 'package:bilibili_desktop/src/utils/app_storage.dart';
@@ -37,7 +38,9 @@ void runMainApp() async{
     await windowManager.focus();
   });
 
-  runApp(ProviderScope(child: const App()));
+  NetworkManager.instance.setupDioAsync().then((value) {
+    runApp(ProviderScope(child: const App()));
+  });
 }
 
 
@@ -63,7 +66,9 @@ void runSubApp(List<String> args) async{
     await windowManager.show();
     await windowManager.focus();
   });
-  runApp(ProviderScope(child: VideoWindowApp(windowId, argument)));
+  NetworkManager.instance.setupDioAsync().then((value) {
+    runApp(ProviderScope(child: VideoWindowApp(windowId, argument)));
+  });
 }
 
 class App extends ConsumerWidget {

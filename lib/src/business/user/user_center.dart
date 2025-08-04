@@ -34,12 +34,13 @@ class UserCenterProvider extends _$UserCenterProvider{
 
 
   bool checkLogin() {
-    return state.userInfo?.isLogin ?? false;
+    // return state.userInfo?.isLogin ?? false;
+    return false;
   }
 
   void getUserCard() async{
     if (!checkLogin()) return;
-    final api = await ref.read(apiProvider);
+    final api = ref.read(apiProvider);
     try {
       final mid = state.userInfo!.mid.toString();
       final userCard = await api.userCard(mid).handle();

@@ -35,7 +35,7 @@ final mainRouteProvider = Provider<StatefulShellRoute>((ref) {
           GoRoute(
             path: MainRoute.home,
             name: 'home',
-            pageBuilder: (context, state) => _buildPageWithTransition(
+            pageBuilder: (context, state) => buildPageWithTransition(
               HomePage(key: const ValueKey('home')),
               state,
             ),
@@ -47,8 +47,8 @@ final mainRouteProvider = Provider<StatefulShellRoute>((ref) {
           GoRoute(
             path: MainRoute.featured,
             name: 'featured',
-            redirect: (_, state) => _redirect(ref, state),
-            pageBuilder: (context, state) => _buildPageWithTransition(
+            redirect: (_, state) => redirect(ref, state),
+            pageBuilder: (context, state) => buildPageWithTransition(
               DirectMessagePage(key: state.pageKey),
               state,
             ),
@@ -60,8 +60,8 @@ final mainRouteProvider = Provider<StatefulShellRoute>((ref) {
           GoRoute(
             path: MainRoute.following,
             name: 'following',
-            redirect: (_, state) => _redirect(ref, state),
-            pageBuilder: (context, state) => _buildPageWithTransition(
+            redirect: (_, state) => redirect(ref, state),
+            pageBuilder: (context, state) => buildPageWithTransition(
               DirectMessagePage(key: state.pageKey),
               state,
             ),
@@ -73,8 +73,20 @@ final mainRouteProvider = Provider<StatefulShellRoute>((ref) {
           GoRoute(
             path: MainRoute.user,
             name: 'user',
-            pageBuilder: (context, state) => _buildPageWithTransition(
+            pageBuilder: (context, state) => buildPageWithTransition(
               UserPage(key: const ValueKey('user')),
+              state,
+            ),
+          ),
+        ],
+      ),
+      StatefulShellBranch(
+        routes: [
+          GoRoute(
+            path: MainRoute.settings,
+            name: 'settings',
+            pageBuilder: (context, state) => buildPageWithTransition(
+              SettingPage(key: const ValueKey('settings')),
               state,
             ),
           ),
@@ -83,21 +95,3 @@ final mainRouteProvider = Provider<StatefulShellRoute>((ref) {
     ],
   );
 });
-
-// 统一的转场动画构建函数
-Page _buildPageWithTransition(Widget child, GoRouterState state) {
-  return CustomTransitionPage(
-    key: state.pageKey,
-    child: child,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      return FadeTransition(opacity: animation, child: child);
-    },
-  );
-}
-
-String? _redirect(Ref ref, GoRouterState state) {
-  if (ref.read(userCenterProviderProvider.notifier).checkLogin()) {
-    return null;
-  }
-  return RootRoute.login;
-}

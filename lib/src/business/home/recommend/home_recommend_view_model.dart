@@ -25,7 +25,7 @@ class HomeRecommendViewModel extends _$HomeRecommendViewModel {
   }
 
   Future<List<Item>> getRecommendList() async {
-    final api = await ref.read(apiProvider);
+    final api = ref.read(apiProvider);
     state = state.copyWith(loading: true);
     try {
       final response = await api.getRecommendVideoList(20).handle();

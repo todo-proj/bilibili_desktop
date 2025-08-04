@@ -56,6 +56,18 @@ class MainViewModel extends _$MainViewModel {
     state = state.copyWith(sideBarItems: _generateSideBarItems());
   }
 
+  void openDirectMessage() {
+    if (!state.showDirectMessage) {
+      state = state.copyWith(showDirectMessage: true);
+    }
+  }
+
+  void closeDirectMessage() {
+    if (state.showDirectMessage) {
+      state = state.copyWith(showDirectMessage: false);
+    }
+  }
+
   void registerWindowMessageReceiver() {
     DesktopMultiWindow.setMethodHandler((call, fromWindowId) async {
       final args = call.arguments;
@@ -77,19 +89,23 @@ class MainViewModel extends _$MainViewModel {
 
 class MainPageState extends Equatable{
   final List<SideBarItem> sideBarItems;
+  final bool showDirectMessage;
   const MainPageState({
     required this.sideBarItems,
+    this.showDirectMessage = false
   });
 
   copyWith({
     List<SideBarItem>? sideBarItems,
+    bool? showDirectMessage,
   })
   {
     return MainPageState(
       sideBarItems: sideBarItems ?? this.sideBarItems,
+      showDirectMessage: showDirectMessage ?? this.showDirectMessage,
     );
   }
   @override
-  List<Object?> get props => [sideBarItems];
+  List<Object?> get props => [sideBarItems, showDirectMessage];
 }
 

@@ -119,7 +119,7 @@ class _DirectMessagePageState extends ConsumerState<DirectMessagePage>{
                           ],
                         ),
                       ),
-                      Text(formatVideoTime(session.timestamp)),
+                      Text(formatTimeStamp(session.timestamp)),
                     ],
                   ),
                 ),

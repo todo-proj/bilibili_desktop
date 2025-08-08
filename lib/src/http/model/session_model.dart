@@ -26,7 +26,7 @@ class SessionModel {
   });
 
   factory SessionModel.fromJson(Map<String, dynamic> json) => SessionModel(
-    sessionList: List<SessionList>.from(json["session_list"].map((x) => SessionList.fromJson(x))),
+    sessionList: List<SessionList>.from(json["session_list"]?.map((x) => SessionList.fromJson(x)) ?? []),
     hasMore: json["has_more"],
     antiDisturbCleaning: json["anti_disturb_cleaning"],
     isAddressListEmpty: json["is_address_list_empty"],

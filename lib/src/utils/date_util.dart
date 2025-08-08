@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 
-String formatVideoTime(int timeStamp) {
+String formatTimeStamp(int timeStamp) {
 
   DateTime time = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
   final now = DateTime.now();
@@ -8,6 +7,9 @@ String formatVideoTime(int timeStamp) {
   final difference = now.difference(time);
   // 24内,显示小时;24之外显示昨天;今年内,显示月日;小于今年,年月日
   if (difference.inHours < hour) {
+    if (difference.inHours == 0) {
+      return '${time.hour}:${time.minute}';
+    }
     return "${difference.inHours}小时前";
   }else if (difference.inHours < 24 + hour) {
     return "昨天";

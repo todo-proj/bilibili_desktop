@@ -57,6 +57,12 @@ dependencies:
   crypto: ^3.0.2
   # https://github.com/MixinNetwork/flutter-plugins/issues/58 这个可以解决子窗口native插件未注册的问题
   desktop_multi_window: ^0.2.1
+  uuid: ^4.5.1
+  file_picker: ^10.2.1
+  # https://github.com/xuelongqy/flutter_easy_refresh
+  easy_refresh: ^3.4.0
+  collection: ^1.18.0
+
 
 dev_dependencies:
   flutter_test:

@@ -140,7 +140,7 @@ class _HomeRecommendPageState extends ConsumerState<HomeRecommendPage> {
                   ),
                 ),
                 Text(
-                  formatVideoTime(item.pubdate),
+                  formatTimeStamp(item.pubdate),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.start,

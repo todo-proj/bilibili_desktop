@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:bilibili_desktop/src/business/common/widget/common_tab_bar.dart';
 import 'package:bilibili_desktop/src/business/message/page_data_request.dart';
+import 'package:bilibili_desktop/src/http/model/session_model.dart';
+import 'package:bilibili_desktop/src/http/model/simple_user_card_model.dart';
 import 'package:bilibili_desktop/src/http/network_manager.dart';
 import 'package:bilibili_desktop/src/providers/api_provider.dart';
 import 'package:bilibili_desktop/src/utils/logger.dart';
@@ -25,10 +28,24 @@ class DirectMessageViewModel extends _$DirectMessageViewModel {
     like: PageDataRequest(),
   };
 
+  Timer? _newSessionsTimer;
+  Timer? _singleUnreadTimer;
+
   @override
   DirectMessageState build() {
     getMessageUnread();
     getSessions();
+
+    _createNewSessionsTimer();
+    _createSingleUnreadTimer();
+
+    ref.onDispose((){
+      _newSessionsTimer?.cancel();
+      _singleUnreadTimer?.cancel();
+    });
+    ref.onRemoveListener((){
+      debugPrint('DirectMessageViewModel remove');
+    });
     return DirectMessageState(items: _generateTabBarItems(), currentTab: chat);
   }
 
@@ -42,13 +59,10 @@ class DirectMessageViewModel extends _$DirectMessageViewModel {
   }
 
   void changeTab(int index) {
-    if (index == 0) {
-      getSessions();
-    }
+
   }
 
   void enterSessionSection(SessionData session) {
-    debugPrint('进入会话, ${identityHashCode(session)}, ${state.pageIndex}');
     state = state.copyWith(currentSession: session, pageIndex: 1);
   }
 
@@ -92,27 +106,11 @@ class DirectMessageViewModel extends _$DirectMessageViewModel {
     final sessions = await messageApi.getSessions().handle();
     final uids = sessions.sessionList.map((e) => e.talkerId).toList().join(',');
     final simpleUsers = await api.getMultiUserCards(uids).handle();
-    List<SessionData> sessionDataList = [];
-    for (var index = 0; index < sessions.sessionList.length; index++) {
-      final session = sessions.sessionList[index];
-      final simpleUser = simpleUsers.users[session.talkerId.toString()];
-      final msgObj = jsonDecode(session.lastMsg.content);
-      final lastMessage = msgObj['title'] ?? msgObj['content'] ?? msgObj['reply_content'];
-      sessionDataList.add(
-        SessionData(
-          sessionTakerId: session.talkerId,
-          sessionType: session.sessionType,
-          unreadCount: session.unreadCount,
-          lastMsg: lastMessage.replaceAll('\n', ' '),
-          timestamp: session.lastMsg.timestamp,
-          userFace: simpleUser?.face ?? session.accountInfo?.picUrl ?? '',
-          userName: simpleUser?.name ?? session.accountInfo?.name ?? '',
-          topTime: session.topTs
-        ),
-      );
-    }
-    sessionDataList.sort((a, b) => b.topTime.compareTo(a.topTime));
-    return sessionDataList;
+    final handleResult = _handleSessions(sessions.sessionList, simpleUsers);
+    final tops = handleResult.$1;
+    final normals = handleResult.$2;
+    tops.sort((a, b) => b.topTime.compareTo(a.topTime));
+    return [...tops, ...normals];
   }
 
   void getPageData() {
@@ -178,6 +176,63 @@ class DirectMessageViewModel extends _$DirectMessageViewModel {
     }
   }
 
+  void newSessionsRequest() async{
+    final messageApi = ref.read(messageApiProvider);
+    final api = ref.read(apiProvider);
+    try {
+      final response = await messageApi.getNewSessions(beginTs: DateTime.now().microsecondsSinceEpoch).handle();
+      if (response.sessionList.isEmpty) return;
+      final uids = response.sessionList.map((e) => e.talkerId).toList().join(',');
+      final simpleUsers = await api.getMultiUserCards(uids).handle();
+      final handleResult = _handleSessions(response.sessionList, simpleUsers);
+      final tops = handleResult.$1;
+      final normals = handleResult.$2;
+      final currentSessions = state.sessions;
+      final oldTops = currentSessions.where((element) => element.isTop).toList();
+      final oldNormals = currentSessions.where((element) => !element.isTop).toList();
+      final newSessions = [...oldTops, ...tops, ...normals, ...oldNormals];
+      state = state.copyWith(sessions: newSessions);
+    }catch(e, s) {
+      L.e('newSessionsRequest: $e', stackTrace: s);
+    }
+  }
+
+  (List<SessionData>, List<SessionData>) _handleSessions(List<SessionList> sessions, SimpleUserCardModel simpleUsers) {
+    List<SessionData> sessionDataList = [];
+    for (var index = 0; index < sessions.length; index++) {
+      final session = sessions[index];
+      final simpleUser = simpleUsers.users[session.talkerId.toString()];
+      final msgObj = jsonDecode(session.lastMsg.content);
+      final lastMessage = msgObj['title'] ?? msgObj['content'] ?? msgObj['reply_content'];
+      sessionDataList.add(
+        SessionData(
+            sessionTakerId: session.talkerId,
+            sessionType: session.sessionType,
+            unreadCount: session.unreadCount,
+            lastMsg: lastMessage.replaceAll('\n', ' '),
+            timestamp: session.lastMsg.timestamp,
+            userFace: simpleUser?.face ?? session.accountInfo?.picUrl ?? '',
+            userName: simpleUser?.name ?? session.accountInfo?.name ?? '',
+            topTime: session.topTs
+        ),
+      );
+    }
+    final tops = sessionDataList.where((session) => session.isTop).toList();
+    final normals = sessionDataList.where((session) => !session.isTop).toList();
+    return (tops, normals);
+  }
+
+  void _createNewSessionsTimer() {
+    _newSessionsTimer = Timer.periodic(Duration(seconds: 20), (timer) async {
+      newSessionsRequest();
+    });
+  }
+
+  void _createSingleUnreadTimer() {
+    _singleUnreadTimer = Timer.periodic(Duration(seconds: 120), (timer) async {
+      getMessageUnread();
+    });
+  }
 }
 
 class DirectMessageState extends Equatable {

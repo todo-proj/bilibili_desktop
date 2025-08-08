@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:bilibili_desktop/src/http/model/basic_user_info_model.dart';
 import 'package:bilibili_desktop/src/http/model/relation_stat_model.dart';
 import 'package:bilibili_desktop/src/http/model/reply_message_model.dart';
 import 'package:bilibili_desktop/src/http/model/search_hot_word_model.dart';
 import 'package:bilibili_desktop/src/http/model/search_result_model.dart';
+import 'package:bilibili_desktop/src/http/model/session_message_model.dart';
 import 'package:bilibili_desktop/src/http/model/session_model.dart';
 import 'package:bilibili_desktop/src/http/model/simple_user_card_model.dart';
 import 'package:bilibili_desktop/src/http/model/single_unread_message_model.dart';
 import 'package:bilibili_desktop/src/http/model/unread_message_model.dart';
+import 'package:bilibili_desktop/src/http/model/upload_image_model.dart';
 import 'package:bilibili_desktop/src/http/model/user_card_model.dart';
 import 'package:bilibili_desktop/src/http/model/wbi_img_model.dart';
 import 'package:dio/dio.dart';
@@ -39,7 +43,6 @@ abstract class ApiService {
   @GET("x/web-interface/nav")
   Future<ApiResponse<BasicUserInfoModel>> getUserAccountInformation();
 
-
   @GET("x/web-interface/nav")
   Future<ApiResponse<WbiImgModel>> getWbiImg();
 
@@ -58,25 +61,33 @@ abstract class ApiService {
   Future<ApiResponse<VideoInfoModel>> videoInfo(@Query("bvid") String bvid);
 
   @GET('x/web-interface/card')
-  Future<ApiResponse<UserCardModel>> userCard(@Query("mid") String mid,);
+  Future<ApiResponse<UserCardModel>> userCard(@Query("mid") String mid);
 
   @GET('x/relation/stat')
-  Future<ApiResponse<RelationStatModel>> relationStat(@Query("vmid") String vmid);
+  Future<ApiResponse<RelationStatModel>> relationStat(
+    @Query("vmid") String vmid,
+  );
 
   @GET("x/web-interface/archive/related")
   Future<ApiResponse<List<Item>>> getRelatedVideo(@Query("bvid") String bvid);
 
   @GET("x/player/wbi/playurl")
-  Future<ApiResponse<VideoUrlModel>> videoUrl(@Queries() Map<String, dynamic> params);
+  Future<ApiResponse<VideoUrlModel>> videoUrl(
+    @Queries() Map<String, dynamic> params,
+  );
 
   //https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/search/search_request.md
   //鉴权方式：Wbi 签名, Cookie 中含有 buvid3 字段
   // keyword
   @GET('x/web-interface/wbi/search/all/v2')
-  Future<ApiResponse<SearchResultModel>> searchAll(@Queries() Map<String, dynamic> params);
+  Future<ApiResponse<SearchResultModel>> searchAll(
+    @Queries() Map<String, dynamic> params,
+  );
 
   @GET("x/web-interface/wbi/search/type")
-  Future<ApiResponse<SearchResultModel>> searchType(@Queries() Map<String, dynamic> params);
+  Future<ApiResponse<SearchResultModel>> searchType(
+    @Queries() Map<String, dynamic> params,
+  );
 
   // https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/search/suggest.md
   @GET('suggest')
@@ -109,24 +120,89 @@ abstract class ApiService {
   Future<ApiResponse<SingleUnreadMessageModel>> getSingleUnreadMsg();
 
   @GET('session_svr/v1/session_svr/get_sessions')
-  Future<ApiResponse<SessionModel>> getSessions({@Query('session_type') int sessionType = 4, @Query('size') int size = 50});
+  Future<ApiResponse<SessionModel>> getSessions({
+    @Query('session_type') int sessionType = 4,
+    @Query('size') int size = 50,
+  });
+
+  @GET('session_svr/v1/session_svr/new_sessions')
+  Future<ApiResponse<SessionModel>> getNewSessions({
+    @Query('begin_ts') required int beginTs,
+    @Query('size') int size = 50,
+  });
 
   @POST('session_svr/v1/session_svr/remove_session')
   @FormUrlEncoded()
-  Future<ApiResponse<dynamic>> removeSession(@Field('talker_id') int talkerId, @Field('session_type') int sessionType, @Field('csrf_token') String csrfToken, @Field('csrf') String csrf);
+  Future<ApiResponse<dynamic>> removeSession(
+    @Field('talker_id') int talkerId,
+    @Field('session_type') int sessionType,
+    @Field('csrf_token') String csrfToken,
+    @Field('csrf') String csrf,
+  );
 
   // 设置会话为已读
   @POST('session_svr/v1/session_svr/update_ack')
   @FormUrlEncoded()
-  Future<ApiResponse<dynamic>> updateSessionRead(@Field('talker_id') int talkerId, @Field('session_type') int sessionType, @Field('csrf_token') String csrfToken, @Field('csrf') String csrf);
+  Future<ApiResponse<dynamic>> updateSessionRead(
+    @Field('talker_id') int talkerId,
+    @Field('session_type') int sessionType,
+    @Field('csrf_token') String csrfToken,
+    @Field('csrf') String csrf,
+  );
 
   // 修改会话置顶状态
   // 0：置顶 1 ：取消置顶
   @POST('session_svr/v1/session_svr/set_top')
   @FormUrlEncoded()
-  Future<ApiResponse<dynamic>> setSessionTop(@Field('talker_id') int talkerId, @Field('session_type') int sessionType, @Field('op_type') int opType, @Field('csrf_token') String csrfToken, @Field('csrf') String csrf);
+  Future<ApiResponse<dynamic>> setSessionTop(
+    @Field('talker_id') int talkerId,
+    @Field('session_type') int sessionType,
+    @Field('op_type') int opType,
+    @Field('csrf_token') String csrfToken,
+    @Field('csrf') String csrf,
+  );
+
+  //发送私信
+  //https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/message/private_msg.md
+  @POST('web_im/v1/web_im/send_msg')
+  @FormUrlEncoded()
+  Future<ApiResponse<dynamic>> sendPrivateMsg(
+    @Field('msg[sender_uid]') int senderId,
+    @Field('msg[receiver_id]') int receiverId,
+    @Field('msg[receiver_type]') int receiverType,
+    @Field('msg[msg_type]') int msgType,
+    @Field('msg[dev_id]') String devId,
+    @Field('msg[timestamp]') int timestamp,
+    @Field('msg[content]') String content,
+    @Field('csrf_token') String csrfToken,
+    @Field('csrf') String csrf,
+  );
+
+  //查询私信消息记录
+  // https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/message/private_msg.md
+  @GET('svr_sync/v1/svr_sync/fetch_session_msgs')
+  Future<ApiResponse<SessionMessageModel>> fetchSessionMessage(
+    @Query('talker_id') int talkerId,
+    @Query('session_type') int sessionType, {
+    @Query('size') int size = 20,
+    @Query('begin_seqno') int? beginCursor,
+    @Query('end_seqno') int? endCursor,
+  });
 
   // https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/user/info.md#%E5%A4%9A%E7%94%A8%E6%88%B7%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF
   @GET('x/polymer/pc-electron/v1/user/cards')
-  Future<ApiResponse<SimpleUserCardModel>> getMultiUserCards(@Query('uids') String uids);
+  Future<ApiResponse<SimpleUserCardModel>> getMultiUserCards(
+    @Query('uids') String uids,
+  );
+
+  //https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/dynamic/publish.md
+  //上传图片
+  @POST('x/dynamic/feed/draw/upload_bfs')
+  @MultiPart()
+  Future<ApiResponse<UploadImageModel>> uploadBfs(
+    @Part(name: 'file_up') File file,
+    @Part(name: 'category') String category,
+    @Part(name: 'csrf') String csrf, {
+    @Part(name: 'biz') String biz = '',
+  });
 }

@@ -17,6 +17,14 @@ class ApiResponse<T> {
     this.result,
   });
 
+  factory ApiResponse.error({String? message, T? data}) {
+    return ApiResponse<T>(
+      code: -1,
+      message: message ?? '请求失败',
+      data: data,
+    );
+  }
+
   factory ApiResponse.fromJson(
       Map<String, dynamic> json,
       T Function(Object? json) fromJsonT,

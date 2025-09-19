@@ -32,24 +32,23 @@ class VideoViewModel extends _$VideoViewModel {
   }
 
 
-  void getVideoInfo(String bvid, String cid, String mid) async {
+  void getVideoInfo(String bvid) async {
     final api = ref.read(apiProvider);
     try {
-      final videoInfoRequest = api.videoInfo(bvid).handle();
+      final videoInfo = await api.videoInfo(bvid).handle();
       // 获取视频up信息
-      final upInfoRequest = api.userCard(mid).handle();
+      final upInfoRequest = api.userCard('${videoInfo.owner.mid}').handle();
       // 获取视频url
       // webi验证
       final params = WbiCheckUtil.generateWbiParams({
         "bvid": bvid,
-        "cid": cid,
+        "cid": videoInfo.cid,
         "qn": "80",
       });
       final videoUrlRequest = api.videoUrl(params).handle();
       // 获取关联视频
       final relatedVideoRequest = api.getRelatedVideo(bvid).handle();
 
-      final videoInfo = await videoInfoRequest;
       final upInfo = await upInfoRequest;
       final videoUrl = await videoUrlRequest;
       final relatedVideo = await relatedVideoRequest;

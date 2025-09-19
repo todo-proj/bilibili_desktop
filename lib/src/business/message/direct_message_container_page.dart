@@ -40,6 +40,7 @@ class _DirectMessageContainerPageState extends ConsumerState<DirectMessageContai
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.dismissed) {
         widget.onClose?.call();
+        _viewModel.exitSessionSection();
       }
     });
     _controller.forward();

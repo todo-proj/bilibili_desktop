@@ -193,7 +193,7 @@ class _VideoPageIntroState extends ConsumerState<VideoPageIntro> {
                 ...relatedVideo.map(
                       (item) => GestureDetector(
                     onTap: (){
-                      _vm.getVideoInfo(item.bvid, item.cid, item.owner.mid);
+                      _vm.getVideoInfo(item.bvid);
                     },
                     child: SizedBox(
                       height: 78,

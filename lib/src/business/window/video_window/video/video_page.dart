@@ -15,15 +15,11 @@ import 'video_page_intro.dart';
 import 'video_view_model.dart';
 
 class VideoPage extends ConsumerStatefulWidget {
-  final String cid;
   final String bvid;
-  final String mid;
 
   const VideoPage({
     super.key,
-    required this.cid,
     required this.bvid,
-    required this.mid,
   });
 
   @override
@@ -37,7 +33,7 @@ class _VideoPageState extends ConsumerState<VideoPage> {
   void initState() {
     super.initState();
     _vm = ref.read(videoViewModelProvider.notifier);
-    _vm.getVideoInfo(widget.bvid, widget.cid, widget.mid);
+    _vm.getVideoInfo(widget.bvid);
   }
 
   @override

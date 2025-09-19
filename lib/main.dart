@@ -8,6 +8,7 @@ import 'package:bilibili_desktop/src/providers/theme/themes_provider.dart';
 import 'package:bilibili_desktop/src/utils/app_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:window_manager/window_manager.dart';
 import 'src/providers/theme/themes.dart';
@@ -79,6 +80,7 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeModeState = ref.watch(themesProvider);
     return MaterialApp.router(
+      builder: FlutterSmartDialog.init(),
       title: 'BiliBili野生客户端',
       theme: Themes.lightTheme,
       darkTheme: Themes.darkTheme,

@@ -44,7 +44,6 @@ class DirectMessageViewModel extends _$DirectMessageViewModel {
       _singleUnreadTimer?.cancel();
     });
     ref.onRemoveListener((){
-      debugPrint('DirectMessageViewModel remove');
     });
     return DirectMessageState(items: _generateTabBarItems(), currentTab: chat);
   }

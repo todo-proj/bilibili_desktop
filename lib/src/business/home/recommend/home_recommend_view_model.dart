@@ -10,7 +10,7 @@ part 'home_recommend_view_model.g.dart';
 class HomeRecommendViewModel extends _$HomeRecommendViewModel {
   @override
   HomeRecommendState build() {
-    refresh();
+    Future.microtask(refresh);
     return HomeRecommendState(items: []);
   }
 

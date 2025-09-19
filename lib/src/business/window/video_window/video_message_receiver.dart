@@ -33,10 +33,8 @@ class VideoMessageReceiver extends _$VideoMessageReceiver {
           state = state.copyWith(mode: dark ? ThemeMode.dark : ThemeMode.light);
           break;
         case WindowMethod.changeVideoMethod:
-          final cid = args["cid"];
           final bvid = args["bvid"];
-          final mid = args["mid"];
-          ref.read(videoViewModelProvider.notifier).getVideoInfo(bvid, cid, mid);
+          ref.read(videoViewModelProvider.notifier).getVideoInfo(bvid);
           break;
       }
       return "result";

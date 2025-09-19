@@ -4,19 +4,17 @@ import 'package:bilibili_desktop/src/utils/wbi_check_util.dart';
 
 class VideoWindowController extends SubWindowController{
 
-  void openVideo(String cid, String bvid, String mid) async{
+  void openVideo(String bvid) async{
     if (await checkIfWindowExist()) {
-      showVideoWindow(cid, bvid, mid);
+      showVideoWindow(bvid);
     } else {
-      openVideoWindow(cid, bvid, mid);
+      openVideoWindow(bvid);
     }
   }
 
-  void openVideoWindow(String cid, String bvid, String mid) async {
+  void openVideoWindow(String bvid) async {
     final arguments = {
-      'cid': cid,
       'bvid': bvid,
-      'mid': mid,
       'img': WbiCheckUtil.imgKey,
       'sub': WbiCheckUtil.subKey,
       'dark': true,
@@ -24,13 +22,11 @@ class VideoWindowController extends SubWindowController{
     openWindow(arguments);
   }
 
-  showVideoWindow(String cid, String bvid, String mid) async {
+  showVideoWindow(String bvid) async {
     if (!await checkIfWindowExist()) return;
     showWindow();
     await sendMessage(WindowMethod.changeVideoMethod, arguments: {
-      'cid': cid,
       'bvid': bvid,
-      'mid': mid,
     });
   }
 

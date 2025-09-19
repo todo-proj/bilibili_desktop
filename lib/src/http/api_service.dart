@@ -18,6 +18,7 @@ import 'package:retrofit/retrofit.dart';
 import 'api_response.dart';
 import 'model/account_model.dart';
 import 'model/login_qr_code_model.dart';
+import 'model/message_content_info.dart';
 import 'model/recommend_video_model.dart';
 import 'model/video_info_model.dart';
 import 'model/video_reply_model.dart';
@@ -204,5 +205,13 @@ abstract class ApiService {
     @Part(name: 'category') String category,
     @Part(name: 'csrf') String csrf, {
     @Part(name: 'biz') String biz = '',
+  });
+
+  @GET('x/im/feed/infoweb')
+  Future<ApiResponse<MessageContentInfo>> getMessageContentInfo({
+    @Query('aids') String? aids,
+    @Query('ep_ids') String? epIds,
+    @Query('article_ids') String? articleIds,
+    @Query('mobi_app') String? tag = 'web',
   });
 }

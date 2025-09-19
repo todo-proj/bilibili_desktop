@@ -94,7 +94,7 @@ class _HomeRecommendPageState extends ConsumerState<HomeRecommendPage> {
   Widget _buildItem(BuildContext context, Item item) {
     return GestureDetector(
       onTap: () {
-        SubWindowManager.instance.getVideoWindowController().openVideo(item.cid, item.bvid, item.owner.mid);
+        SubWindowManager.instance.getVideoWindowController().openVideo(item.bvid);
       },
       child: Container(
         decoration: BoxDecoration(),

@@ -5,6 +5,7 @@ import 'package:bilibili_desktop/src/business/splash_page.dart';
 import 'package:bilibili_desktop/src/business/user/user_center.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
 
 import 'main_route.dart';
@@ -17,6 +18,7 @@ class RootRoute {
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
+    observers: [FlutterSmartDialog.observer],
     routes: [
       GoRoute(
         path: '/',

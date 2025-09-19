@@ -48,7 +48,7 @@ class _VideoWindowAppState extends ConsumerState<VideoWindowApp> with WindowList
       darkTheme: Themes.darkTheme,
       themeMode: mode,
       home: Scaffold(
-        body: VideoPage(cid: widget.argument['cid'], bvid: widget.argument['bvid'], mid: widget.argument['mid']),
+        body: VideoPage(bvid: widget.argument['bvid']),
       ),
     );
   }

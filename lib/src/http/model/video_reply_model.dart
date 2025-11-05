@@ -10,9 +10,7 @@ String videoReplyModelToJson(VideoReplyModel data) => json.encode(data.toJson())
 
 class VideoReplyModel {
   Page page;
-  Config config;
   List<Reply> replies;
-  List<dynamic> hots;
   Upper upper;
   dynamic top;
   dynamic notice;
@@ -23,14 +21,11 @@ class VideoReplyModel {
   List<int> supportMode;
   Folder folder;
   dynamic lotteryCard;
-  bool showBvid;
   Control control;
 
   VideoReplyModel({
     required this.page,
-    required this.config,
     required this.replies,
-    required this.hots,
     required this.upper,
     required this.top,
     required this.notice,
@@ -41,15 +36,12 @@ class VideoReplyModel {
     required this.supportMode,
     required this.folder,
     required this.lotteryCard,
-    required this.showBvid,
     required this.control,
   });
 
   factory VideoReplyModel.fromJson(Map<String, dynamic> json) => VideoReplyModel(
     page: Page.fromJson(json["page"]),
-    config: Config.fromJson(json["config"]),
     replies: List<Reply>.from(json["replies"].map((x) => Reply.fromJson(x))),
-    hots: List<dynamic>.from(json["hots"].map((x) => x)),
     upper: Upper.fromJson(json["upper"]),
     top: json["top"],
     notice: json["notice"],
@@ -60,15 +52,12 @@ class VideoReplyModel {
     supportMode: List<int>.from(json["support_mode"].map((x) => x)),
     folder: Folder.fromJson(json["folder"]),
     lotteryCard: json["lottery_card"],
-    showBvid: json["show_bvid"],
     control: Control.fromJson(json["control"]),
   );
 
   Map<String, dynamic> toJson() => {
     "page": page.toJson(),
-    "config": config.toJson(),
     "replies": List<dynamic>.from(replies.map((x) => x.toJson())),
-    "hots": List<dynamic>.from(hots.map((x) => x)),
     "upper": upper.toJson(),
     "top": top,
     "notice": notice,
@@ -79,50 +68,10 @@ class VideoReplyModel {
     "support_mode": List<dynamic>.from(supportMode.map((x) => x)),
     "folder": folder.toJson(),
     "lottery_card": lotteryCard,
-    "show_bvid": showBvid,
     "control": control.toJson(),
   };
 }
 
-class Config {
-  int showadmin;
-  int showentry;
-  int showfloor;
-  int showtopic;
-  bool showUpFlag;
-  bool readOnly;
-  bool showDelLog;
-
-  Config({
-    required this.showadmin,
-    required this.showentry,
-    required this.showfloor,
-    required this.showtopic,
-    required this.showUpFlag,
-    required this.readOnly,
-    required this.showDelLog,
-  });
-
-  factory Config.fromJson(Map<String, dynamic> json) => Config(
-    showadmin: json["showadmin"],
-    showentry: json["showentry"],
-    showfloor: json["showfloor"],
-    showtopic: json["showtopic"],
-    showUpFlag: json["show_up_flag"],
-    readOnly: json["read_only"],
-    showDelLog: json["show_del_log"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "showadmin": showadmin,
-    "showentry": showentry,
-    "showfloor": showfloor,
-    "showtopic": showtopic,
-    "show_up_flag": showUpFlag,
-    "read_only": readOnly,
-    "show_del_log": showDelLog,
-  };
-}
 
 class Control {
   bool inputDisable;
@@ -265,7 +214,6 @@ class Reply {
   int assist;
   Folder folder;
   UpAction upAction;
-  bool showFollow;
   bool invisible;
   ReplyControl replyControl;
 
@@ -294,7 +242,6 @@ class Reply {
     required this.assist,
     required this.folder,
     required this.upAction,
-    required this.showFollow,
     required this.invisible,
     required this.replyControl,
   });
@@ -320,11 +267,10 @@ class Reply {
     action: json["action"],
     member: Member.fromJson(json["member"]),
     content: Content.fromJson(json["content"]),
-    replies: List<dynamic>.from(json["replies"].map((x) => x)),
+    replies: json['replies'] == null ? [] : List<dynamic>.from(json["replies"].map((x) => x)),
     assist: json["assist"],
     folder: Folder.fromJson(json["folder"]),
     upAction: UpAction.fromJson(json["up_action"]),
-    showFollow: json["show_follow"],
     invisible: json["invisible"],
     replyControl: ReplyControl.fromJson(json["reply_control"]),
   );
@@ -354,7 +300,6 @@ class Reply {
     "assist": assist,
     "folder": folder.toJson(),
     "up_action": upAction.toJson(),
-    "show_follow": showFollow,
     "invisible": invisible,
     "reply_control": replyControl.toJson(),
   };
@@ -362,8 +307,8 @@ class Reply {
 
 class Content {
   String message;
-  int plat;
-  String device;
+  int? plat;
+  String? device;
   List<dynamic> members;
   Map<String, Emote> emote;
   JumpUrl jumpUrl;
@@ -384,7 +329,7 @@ class Content {
     plat: json["plat"],
     device: json["device"],
     members: List<dynamic>.from(json["members"].map((x) => x)),
-    emote: Map.from(json["emote"]).map((k, v) => MapEntry<String, Emote>(k, Emote.fromJson(v))),
+    emote: json['emote'] == null ? {} : Map.from(json["emote"]).map((k, v) => MapEntry<String, Emote>(k, Emote.fromJson(v))),
     jumpUrl: JumpUrl.fromJson(json["jump_url"]),
     maxLine: json["max_line"],
   );
@@ -485,7 +430,7 @@ class Member {
   String sign;
   String avatar;
   String rank;
-  String displayRank;
+  String? displayRank;
   int faceNftNew;
   int isSeniorMember;
   LevelInfo levelInfo;
@@ -494,8 +439,8 @@ class Member {
   OfficialVerify officialVerify;
   Vip vip;
   dynamic fansDetail;
-  int following;
-  int isFollowed;
+  int? following;
+  int? isFollowed;
   UserSailing userSailing;
   bool isContractor;
   String contractDesc;
@@ -691,8 +636,8 @@ class MemberPendant {
 }
 
 class UserSailing {
-  UserSailingPendant pendant;
-  Cardbg cardbg;
+  UserSailingPendant? pendant;
+  Cardbg? cardbg;
   dynamic cardbgWithFocus;
 
   UserSailing({
@@ -702,14 +647,14 @@ class UserSailing {
   });
 
   factory UserSailing.fromJson(Map<String, dynamic> json) => UserSailing(
-    pendant: UserSailingPendant.fromJson(json["pendant"]),
-    cardbg: Cardbg.fromJson(json["cardbg"]),
+    pendant: json['pendant'] == null ? null : UserSailingPendant.fromJson(json["pendant"]),
+    cardbg: json['cardbg'] == null ? null : Cardbg.fromJson(json["cardbg"]),
     cardbgWithFocus: json["cardbg_with_focus"],
   );
 
   Map<String, dynamic> toJson() => {
-    "pendant": pendant.toJson(),
-    "cardbg": cardbg.toJson(),
+    "pendant": pendant?.toJson(),
+    "cardbg": cardbg?.toJson(),
     "cardbg_with_focus": cardbgWithFocus,
   };
 }
@@ -832,7 +777,7 @@ class Vip {
   int themeType;
   Label label;
   int avatarSubscript;
-  String avatarSubscriptUrl;
+  String? avatarSubscriptUrl;
   String nicknameColor;
 
   Vip({

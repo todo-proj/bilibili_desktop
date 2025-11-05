@@ -56,6 +56,8 @@ class _VideoPageState extends ConsumerState<VideoPage> {
                 child: Row(
                   spacing: 40,
                   children: [
+                    if (Platform.isMacOS)
+                      SizedBox(width: 20,),
                     SizedBox(
                       height: 30,
                       child: hoverButton(context, child: Padding(

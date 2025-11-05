@@ -18,6 +18,8 @@ class VideoViewModel extends _$VideoViewModel {
 
   // Create a [VideoController] to handle video output from [Player].
   late final controller = VideoController(player);
+  int page = 1;
+  int replyId = 0;
 
   @override
   VideoPageState build() {
@@ -76,6 +78,7 @@ class VideoViewModel extends _$VideoViewModel {
           shareNum: videoInfo.stat.share,
         ),
       );
+      queryVideoComment(bvid);
       debugPrint('play_video');
       if (state.url.isNotEmpty) {
         player.open(
@@ -89,6 +92,21 @@ class VideoViewModel extends _$VideoViewModel {
       L.e(e, stackTrace: s);
     }
   }
+
+  void queryVideoComment(String bvid) async{
+    final api = ref.read(apiProvider);
+    try {
+      final response = await api.videoReply(bvid, page).handle();
+      state = state.copyWith(
+        replies: state.replies + response.replies,
+        items: [TabBarItem("简介", "intro"), TabBarItem("评论", "comment", num: response.page.count.toString())],
+      );
+      page++;
+    }catch(e,s) {
+      L.e("queryVideoComment: $e", stackTrace: s);
+    }
+  }
+  void queryVideoCommentReply() {}
 
   void generateItems() {}
 

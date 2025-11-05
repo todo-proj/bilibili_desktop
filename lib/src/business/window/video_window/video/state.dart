@@ -1,6 +1,7 @@
 import 'package:bilibili_desktop/src/business/common/widget/common_tab_bar.dart';
 import 'package:bilibili_desktop/src/http/model/recommend_video_model.dart';
 import 'package:bilibili_desktop/src/http/model/video_info_model.dart';
+import 'package:bilibili_desktop/src/http/model/video_reply_model.dart' show Reply;
 import 'package:equatable/equatable.dart';
 
 class VideoPageState extends Equatable {
@@ -15,6 +16,7 @@ class VideoPageState extends Equatable {
   final int selectedItemIndex;
   final VideoIntro intro;
   final List<Page> pages;
+  final List<Reply> replies;
 
   const VideoPageState({
     this.bvid = "",
@@ -28,6 +30,7 @@ class VideoPageState extends Equatable {
     this.pages = const [],
     required this.selectedItemIndex,
     required this.owner,
+    this.replies = const [],
   });
 
   VideoPageState copyWith({
@@ -42,6 +45,7 @@ class VideoPageState extends Equatable {
     Owner? owner,
     VideoIntro? intro,
     List<Page>? pages,
+    List<Reply>? replies,
   }) {
     return VideoPageState(
       bvid: bvid ?? this.bvid,
@@ -55,6 +59,7 @@ class VideoPageState extends Equatable {
       owner: owner ?? this.owner,
       intro: intro ?? this.intro,
       pages: pages ?? this.pages,
+      replies: replies ?? this.replies,
     );
   }
 

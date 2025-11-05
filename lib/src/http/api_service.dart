@@ -103,7 +103,16 @@ abstract class ApiService {
     @Query("oid") String oid,
     @Query("pn") int pn, {
     @Query("type") int type = 1,
-    @Query("mode") int mode = 3,
+    @Query("ps") int ps = 20,
+  });
+
+  // 获取指定评论的回复
+  @GET("x/v2/reply/reply")
+  Future<ApiResponse<VideoReplyModel>> commentReply(
+    @Query("oid") String oid,
+    @Query("root") int root,
+    @Query("pn") int pn, {
+    @Query("type") int type = 1,
     @Query("ps") int ps = 20,
   });
 

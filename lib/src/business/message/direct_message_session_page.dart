@@ -103,7 +103,7 @@ class _DirectMessageSessionPageState
             ),
           ),
           Container(
-            color: Colors.grey,
+            color: Theme.of(context).appColor.dividerColor,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -117,7 +117,10 @@ class _DirectMessageSessionPageState
                       }
                     },
                     child: Container(
-                      decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.all(Radius.circular(6))),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).appColor.inputBackground,
+                        borderRadius: BorderRadius.all(Radius.circular(6)),
+                      ),
                       margin: EdgeInsets.all(5),
                       child: ValueListenableBuilder(
                         valueListenable: _textController,
@@ -163,7 +166,7 @@ class _DirectMessageSessionPageState
                               hintText: "发个消息聊聊呗～",
                               hintStyle: TextStyle(
                                 fontSize: 16,
-                                color: Colors.grey,
+                                color: Theme.of(context).appColor.inputHintText,
                               ),
                             ),
                           );

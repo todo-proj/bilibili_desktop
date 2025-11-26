@@ -131,7 +131,11 @@ class _DirectMessagePageState extends ConsumerState<DirectMessagePage>{
                       child: FittedBox(
                         child: Text(
                           session.unreadCount.toString(),
-                          style: TextStyle(color: Colors.white, height: 1, fontSize: 12),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            height: 1,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     ),

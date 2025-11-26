@@ -4,6 +4,7 @@ import 'package:bilibili_desktop/src/business/common/widget/hover_widget.dart';
 import 'package:bilibili_desktop/src/business/main/search/search_view_model.dart';
 import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/providers/router/main_route.dart';
+import 'package:bilibili_desktop/src/providers/theme/extension/app_color.dart';
 import 'package:bilibili_desktop/src/utils/string_util.dart';
 import 'package:bilibili_desktop/src/utils/widget_util.dart';
 import 'package:flutter/material.dart';
@@ -130,7 +131,10 @@ class TitleSearchPanelState extends ConsumerState<TitleSearchPanel> {
             },
             decoration: InputDecoration(
               hintText: '搜索你感兴趣的视频',
-              hintStyle: TextStyle(fontSize: 14, color: Colors.grey[500]),
+              hintStyle: TextStyle(
+                fontSize: 14,
+                color: Theme.of(context).appColor.inputHintText,
+              ),
               contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
               // 让文字垂直居中
               suffixIcon: Icon(Icons.search, size: 24),
@@ -193,8 +197,8 @@ class TitleSearchPanelState extends ConsumerState<TitleSearchPanel> {
                                       },
                                       child: ColoredBox(
                                         color: value
-                                            ? Colors.grey[300]!
-                                            : Colors.white,
+                                            ? Theme.of(context).appColor.searchSuggestHoverBackground
+                                            : Theme.of(context).appColor.searchSuggestBackground,
                                         child: ListTile(
                                           title: StringUtils.formatTag(
                                             suggests[index].name,

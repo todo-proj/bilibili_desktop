@@ -53,9 +53,15 @@ class CommonTabBar extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Colors.grey.shade300,
+                          color: Theme.of(context).appColor.tabBarBadgeBackground,
                         ),
-                        child: Text(item.num!, style: TextStyle(fontSize: 12, color: Colors.grey)),
+                        child: Text(
+                          item.num!,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).appColor.tabBarBadgeText,
+                          ),
+                        ),
                       )
                   ],
               );

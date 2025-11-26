@@ -1,6 +1,5 @@
-import 'dart:math' as math;
-
 import 'package:bilibili_desktop/src/business/common/widget/common_widget.dart';
+import 'package:bilibili_desktop/src/providers/theme/extension/app_color.dart';
 import 'package:bilibili_desktop/src/utils/asset_util.dart';
 import 'package:bilibili_desktop/src/utils/string_util.dart';
 import 'package:bilibili_desktop/src/utils/widget_util.dart';
@@ -44,26 +43,38 @@ class _VideoPageIntroState extends ConsumerState<VideoPageIntro> {
             Row(
               spacing: 10,
               children: [
-                ClipOval(child: userAvatar(url: owner.face, size: 50)),
+                ClipOval(child: userAvatar(url: owner.face, size: 50, context: context)),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         owner.name,
-                        style: TextStyle(fontSize: 14, color: Colors.white),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Theme.of(context).appColor.videoPageText,
+                        ),
                       ),
                       Row(
                         spacing: 10,
                         children: [
                           Text(
                             "${StringUtils.formatNum(owner.follower)}粉丝",
-                            style: TextStyle(color: Colors.white, fontSize: 11),
+                            style: TextStyle(
+                              color: Theme.of(context).appColor.videoPageText,
+                              fontSize: 11,
+                            ),
                           ),
-                          CircleAvatar(backgroundColor: Colors.grey, radius: 1),
+                          CircleAvatar(
+                            backgroundColor: Theme.of(context).appColor.videoPageSecondaryText,
+                            radius: 1,
+                          ),
                           Text(
                             "${StringUtils.formatNum(owner.likeNum)}点赞",
-                            style: TextStyle(color: Colors.white, fontSize: 11),
+                            style: TextStyle(
+                              color: Theme.of(context).appColor.videoPageText,
+                              fontSize: 11,
+                            ),
                           ),
                         ],
                       ),
@@ -84,7 +95,7 @@ class _VideoPageIntroState extends ConsumerState<VideoPageIntro> {
                       Text(
                         videoTitle,
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Theme.of(context).appColor.videoPageText,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
@@ -92,7 +103,9 @@ class _VideoPageIntroState extends ConsumerState<VideoPageIntro> {
                       intro.showDesc
                           ? Text(
                               videoDesc,
-                              style: TextStyle(color: Colors.grey),
+                              style: TextStyle(
+                                color: Theme.of(context).appColor.videoPageSecondaryText,
+                              ),
                             )
                           : SizedBox.shrink(),
                     ],
@@ -110,7 +123,9 @@ class _VideoPageIntroState extends ConsumerState<VideoPageIntro> {
                           duration: Duration(milliseconds: 300),
                           child: Text(
                             intro.showDesc ? "展开" : "收起",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(
+                              color: Theme.of(context).appColor.videoPageText,
+                            ),
                           ),
                         ),
                         AnimatedRotation(
@@ -118,7 +133,7 @@ class _VideoPageIntroState extends ConsumerState<VideoPageIntro> {
                           duration: Duration(milliseconds: 300),
                           child: Icon(
                             Icons.keyboard_arrow_down_rounded,
-                            color: Colors.white,
+                            color: Theme.of(context).appColor.videoPageText,
                             size: 20,
                           ),
                         ),
@@ -160,7 +175,7 @@ class _VideoPageIntroState extends ConsumerState<VideoPageIntro> {
                 ? Container(
                     constraints: BoxConstraints(maxHeight: 200),
                     decoration: BoxDecoration(
-                      color: Color(0XFF333333),
+                      color: Theme.of(context).appColor.videoPageBackground,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     margin: EdgeInsets.only(top: 20),
@@ -176,7 +191,13 @@ class _VideoPageIntroState extends ConsumerState<VideoPageIntro> {
                             itemCount: pages.length,
                             itemBuilder: (context, index) {
                               return ListTile(
-                                title: Text(pages[index].pagePart, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white)),
+                                title: Text(
+                                  pages[index].pagePart,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Theme.of(context).appColor.videoPageText,
+                                  ),
+                                ),
                               );
                             },
                           ),
@@ -211,52 +232,102 @@ class _VideoPageIntroState extends ConsumerState<VideoPageIntro> {
                                   width: 140,
                                 ),
                                 Positioned(
-                                    bottom: 0,
-                                    right: 0,
-                                    left: 0,
-                                    child: Container(
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter,
-                                            colors: [Colors.transparent, Colors.black])
+                                  bottom: 0,
+                                  right: 0,
+                                  left: 0,
+                                  child: Container(
+                                    height: 30,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          Colors.transparent,
+                                          Theme.of(context).appColor.videoPageBackground,
+                                        ],
                                       ),
-                                        child: Align(
-                                          alignment: Alignment(0.8, 0.4),
-                                            child: Text(StringUtils.formatDuration(item.duration), style: TextStyle(color: Colors.white),))))
+                                    ),
+                                    child: Align(
+                                      alignment: Alignment(0.8, 0.4),
+                                      child: Text(
+                                        StringUtils.formatDuration(item.duration),
+                                        style: TextStyle(
+                                          color: Theme.of(context).appColor.videoPageText,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
-                          Expanded(child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            spacing: 2,
-                            children: [
-                              Text(item.title, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white),),
-                              Spacer(),
-                              Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    'icon_author'.svg,
-                                    semanticsLabel: 'UP作者',
-                                    width: 15,
-                                    height: 15,
-                                    colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              spacing: 2,
+                              children: [
+                                Text(
+                                  item.title,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Theme.of(context).appColor.videoPageText,
                                   ),
-                                  Text(item.owner.name, style: TextStyle(color: Colors.grey, fontSize: 11),),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Icon(Icons.play_circle_outline_rounded, size: 15, color: Colors.grey,),
-                                  Text(StringUtils.formatNum(item.stat.view), style: TextStyle(color: Colors.grey, fontSize: 11),),
-                                  5.wSize,
-                                  Icon(Icons.message, size: 15, color: Colors.grey,),
-                                  Text(StringUtils.formatNum(item.stat.danmaku), style: TextStyle(color: Colors.grey, fontSize: 11),),
-                                ],
-                              )
-                            ],
-                          )),
+                                ),
+                                Spacer(),
+                                Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      'icon_author'.svg,
+                                      semanticsLabel: 'UP作者',
+                                      width: 15,
+                                      height: 15,
+                                      colorFilter: ColorFilter.mode(
+                                        Theme.of(context).appColor.videoPageSecondaryText,
+                                        BlendMode.srcIn,
+                                      ),
+                                    ),
+                                    Text(
+                                      item.owner.name,
+                                      style: TextStyle(
+                                        color: Theme.of(context).appColor.videoPageSecondaryText,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.play_circle_outline_rounded,
+                                      size: 15,
+                                      color: Theme.of(context).appColor.videoPageSecondaryText,
+                                    ),
+                                    Text(
+                                      StringUtils.formatNum(item.stat.view),
+                                      style: TextStyle(
+                                        color: Theme.of(context).appColor.videoPageSecondaryText,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                    5.wSize,
+                                    Icon(
+                                      Icons.message,
+                                      size: 15,
+                                      color: Theme.of(context).appColor.videoPageSecondaryText,
+                                    ),
+                                    Text(
+                                      StringUtils.formatNum(item.stat.danmaku),
+                                      style: TextStyle(
+                                        color: Theme.of(context).appColor.videoPageSecondaryText,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -281,8 +352,7 @@ class _VideoPageIntroState extends ConsumerState<VideoPageIntro> {
           Set<WidgetState> states,
         ) {
           if (states.contains(WidgetState.hovered)) {
-            // return bgColor.withValues(alpha: 0.5); // hover 时的颜色
-            return Color(0XFF333333); // hover 时的颜色
+            return Theme.of(context).appColor.videoPageBackground;
           }
           return Colors.transparent;
         }),
@@ -294,9 +364,20 @@ class _VideoPageIntroState extends ConsumerState<VideoPageIntro> {
       ),
       icon: Column(
         children: [
-          Image.asset(icon, width: 25, height: 25, color: Color(0XFFCDCDCD)),
+          Image.asset(
+            icon,
+            width: 25,
+            height: 25,
+            color: Theme.of(context).appColor.videoPageSecondaryText,
+          ),
           10.hSize,
-          Text(title, style: TextStyle(fontSize: 11, color: Colors.white)),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 11,
+              color: Theme.of(context).appColor.videoPageText,
+            ),
+          ),
         ],
       ),
     );

@@ -34,8 +34,7 @@ class UserCenterProvider extends _$UserCenterProvider{
 
 
   bool checkLogin() {
-    // return state.userInfo?.isLogin ?? false;
-    return false;
+    return state.userInfo?.isLogin ?? false;
   }
 
   void getUserCard() async{

@@ -6,6 +6,7 @@ import 'package:bilibili_desktop/src/business/user/user_center.dart';
 import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/providers/router/main_route.dart';
 import 'package:bilibili_desktop/src/providers/router/root_route.dart';
+import 'package:bilibili_desktop/src/providers/theme/extension/app_color.dart';
 import 'package:bilibili_desktop/src/providers/theme/themes_provider.dart';
 import 'package:bilibili_desktop/src/utils/widget_util.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -34,7 +35,7 @@ class _SideBarState extends ConsumerState<SideBar> {
 
     return Container(
       width: WindowConfig.sideBarWidth,
-      color: Colors.grey[800],
+      color: Theme.of(context).appColor.sideBarBackground,
       child: Column(
         spacing: 10,
         children: [
@@ -42,7 +43,7 @@ class _SideBarState extends ConsumerState<SideBar> {
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: Colors.grey,
+              color: Theme.of(context).appColor.sideBarButtonBackground,
               borderRadius: BorderRadius.circular(6),
             ),
             child: GestureDetector(
@@ -121,11 +122,11 @@ class _SideBarState extends ConsumerState<SideBar> {
   Widget _buildItemZone(SideBarItem item) {
     final defaultAvatar = CircleAvatar(
       radius: 20,
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: Theme.of(context).appColor.defaultAvatarBackground,
       child: Image.asset(
         'assets/images/icon_default_avatar.png',
         width: IconTheme.of(context).size,
-        color: Colors.grey,
+        color: Theme.of(context).appColor.defaultAvatarIcon,
       ),
     );
     if (item.object == null) {

@@ -1,3 +1,4 @@
+import 'package:bilibili_desktop/src/providers/theme/extension/app_color.dart';
 import 'package:bilibili_desktop/src/utils/string_util.dart';
 import 'package:bilibili_desktop/src/utils/widget_util.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -18,7 +19,9 @@ class MessageItem extends StatelessWidget {
   EdgeInsets get iconPadding =>
       isLeft ? const EdgeInsets.only(right: 5) : const EdgeInsets.only(left: 5);
 
-  Color get panelColor => isLeft ? Colors.grey : const Color(0xff96EC6D);
+  Color panelColor(BuildContext context) => isLeft 
+      ? Theme.of(context).appColor.messageBubbleLeft 
+      : const Color(0xff96EC6D);
 
   TextDirection get textDirection =>
       isLeft ? TextDirection.ltr : TextDirection.rtl;
@@ -26,7 +29,7 @@ class MessageItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (message.type == MessageType.time) {
-      return _buildTime();
+      return _buildTime(context);
     }
     return Padding(
       padding: contentPadding,
@@ -42,42 +45,45 @@ class MessageItem extends StatelessWidget {
               bottomLeft: Radius.circular(20),
               bottomRight: Radius.circular(20),
             ),
-              child: _buildContent())),
+              child: _buildContent(context))),
         ],
       ),
     );
   }
 
-  Widget _buildTime() {
+  Widget _buildTime(BuildContext context) {
     final data = message.data as MessageText;
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 5),
         child: Text(
           data.texts.first.$1,
-          style: TextStyle(fontSize: 12, color: Colors.grey),
+          style: TextStyle(
+            fontSize: 12,
+            color: Theme.of(context).appColor.messageTimeText,
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(BuildContext context) {
     switch(message.type) {
       case MessageType.text:
-        return _buildText();
+        return _buildText(context);
       case MessageType.image:
         return _buildImage();
       case MessageType.link:
-        return _buildLink();
+        return _buildLink(context);
       case MessageType.time:
-        return _buildTime();
+        return _buildTime(context);
     }
   }
 
-  Widget _buildText() {
+  Widget _buildText(BuildContext context) {
     final data = message.data as MessageText;
     return Container(
-      color: panelColor,
+      color: panelColor(context),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         child: Text.rich(TextSpan(
@@ -107,7 +113,7 @@ class MessageItem extends StatelessWidget {
     );
   }
 
-  Widget _buildLink() {
+  Widget _buildLink(BuildContext context) {
     final data = message.data as MessageLink;
     return GestureDetector(
       onTap: (){
@@ -116,7 +122,7 @@ class MessageItem extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: panelColor,
+          color: panelColor(context),
         ),
         padding: EdgeInsets.all(10),
         height: 100,

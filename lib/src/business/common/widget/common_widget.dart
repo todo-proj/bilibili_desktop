@@ -101,11 +101,13 @@ Widget followButton(BuildContext context, String title, VoidCallback onPressed) 
   );
 }
 
-Widget userAvatar({String? url, required double size}) {
+Widget userAvatar({String? url, required double size, BuildContext? context}) {
   final defaultAvatar = Image.asset(
     'assets/images/icon_default_avatar.png',
     width: size,
-    color: Colors.grey,
+    color: context != null 
+        ? Theme.of(context).appColor.defaultAvatarIcon
+        : Colors.grey,
   );
   if (url == null) {
     return defaultAvatar;

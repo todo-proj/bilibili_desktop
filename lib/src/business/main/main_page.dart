@@ -6,7 +6,7 @@ import 'package:bilibili_desktop/src/business/main/search/search_view_model.dart
 import 'package:bilibili_desktop/src/business/main/search/title_search_panel.dart';
 import 'package:bilibili_desktop/src/business/main/window_control_bar.dart';
 import 'package:bilibili_desktop/src/business/message/direct_message_container_page.dart';
-import 'package:bilibili_desktop/src/business/message/direct_message_page.dart';
+import 'package:bilibili_desktop/src/providers/theme/extension/app_color.dart';
 import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/providers/router/main_route.dart';
 import 'package:bilibili_desktop/src/providers/router/router_history.dart';
@@ -166,7 +166,11 @@ class _MainPageState extends ConsumerState<MainPage> with WindowListener {
                             ),
                           ),
                         ),
-                        Divider(height: 0.1, color: Colors.grey, thickness: 0.1),
+                        Divider(
+                          height: 0.1,
+                          color: Theme.of(context).appColor.dividerColor,
+                          thickness: 0.1,
+                        ),
                         Expanded(child: widget.child),
                       ],
                     ),

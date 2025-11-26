@@ -5,6 +5,7 @@ import 'package:bilibili_desktop/src/business/window/sub_window_manager.dart';
 import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/http/model/recommend_video_model.dart'
     show Item;
+import 'package:bilibili_desktop/src/providers/theme/extension/app_color.dart';
 import 'package:bilibili_desktop/src/utils/asset_util.dart';
 import 'package:bilibili_desktop/src/utils/date_util.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -127,16 +128,25 @@ class _HomeRecommendPageState extends ConsumerState<HomeRecommendPage> {
                   semanticsLabel: 'UP作者',
                   width: 20,
                   height: 20,
-                  colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+                  colorFilter: ColorFilter.mode(
+                    Theme.of(context).appColor.secondaryText,
+                    BlendMode.srcIn,
+                  ),
                 ),
-                CircleAvatar(backgroundColor: Colors.grey, radius: 1),
+                CircleAvatar(
+                  backgroundColor: Theme.of(context).appColor.secondaryText,
+                  radius: 1,
+                ),
                 Flexible(
                   child: Text(
                     item.owner.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Theme.of(context).appColor.secondaryText,
+                    ),
                   ),
                 ),
                 Text(
@@ -144,7 +154,10 @@ class _HomeRecommendPageState extends ConsumerState<HomeRecommendPage> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.start,
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Theme.of(context).appColor.secondaryText,
+                  ),
                 ),
               ],
             ),

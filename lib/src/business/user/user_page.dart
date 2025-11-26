@@ -54,7 +54,7 @@ class _UserPageState extends ConsumerState<UserPage> {
               child: Row(
                 spacing: 20,
                 children: [
-                  userAvatar(url: userInfo?.face, size: 80),
+                  userAvatar(url: userInfo?.face, size: 80, context: context),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -104,7 +104,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                         SizedBox(
                           height: 15,
                           child: VerticalDivider(
-                            color: Colors.grey,
+                            color: Theme.of(context).appColor.dividerColor,
                             width: 5,
                             thickness: 0.5,
                           ),
@@ -119,7 +119,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                         SizedBox(
                           height: 15,
                           child: VerticalDivider(
-                            color: Colors.grey,
+                            color: Theme.of(context).appColor.dividerColor,
                             width: 5,
                             thickness: 0.5,
                           ),
@@ -145,7 +145,7 @@ class _UserPageState extends ConsumerState<UserPage> {
               ),
             ),
             20.hSize,
-            Divider(color: Colors.grey,),
+            Divider(color: Theme.of(context).appColor.dividerColor),
             20.hSize,
             CommonTabBar(items: items, initialIndex: 0, onTap: (index, tag){})
           ],

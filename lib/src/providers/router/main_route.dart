@@ -1,9 +1,9 @@
+import 'package:bilibili_desktop/src/business/featured/featured_page.dart';
+import 'package:bilibili_desktop/src/business/following/following_page.dart';
 import 'package:bilibili_desktop/src/business/home/home_page.dart';
+import 'package:bilibili_desktop/src/business/home/chase/chase_detail/chase_detail_page.dart';
 import 'package:bilibili_desktop/src/business/main/main_page.dart';
-import 'package:bilibili_desktop/src/business/main/search/search_page.dart';
-import 'package:bilibili_desktop/src/business/message/direct_message_page.dart';
 import 'package:bilibili_desktop/src/business/setting/setting_page.dart';
-import 'package:bilibili_desktop/src/business/user/user_center.dart';
 import 'package:bilibili_desktop/src/business/user/user_page.dart';
 import 'package:bilibili_desktop/src/providers/router/root_route.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +20,7 @@ class MainRoute {
   static const String following = '/main/following'; // 动态
   static const String theme = '/main/theme';
   static const String search = '/main/search';
+  static const String chaseDetail = '/main/home/chase/detail';
 }
 
 // StatefulShellRoute
@@ -39,6 +40,16 @@ final mainRouteProvider = Provider<StatefulShellRoute>((ref) {
               HomePage(key: const ValueKey('home')),
               state,
             ),
+            routes: [
+              GoRoute(
+                path: 'chase/detail',
+                name: 'chaseDetail',
+                pageBuilder: (context, state) => buildPageWithTransition(
+                  const ChaseDetailPage(key: ValueKey('chaseDetail')),
+                  state,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -49,7 +60,7 @@ final mainRouteProvider = Provider<StatefulShellRoute>((ref) {
             name: 'featured',
             redirect: (_, state) => redirect(ref, state),
             pageBuilder: (context, state) => buildPageWithTransition(
-              DirectMessagePage(key: state.pageKey),
+              FeaturedPage(key: const ValueKey('featured')),
               state,
             ),
           ),
@@ -62,7 +73,7 @@ final mainRouteProvider = Provider<StatefulShellRoute>((ref) {
             name: 'following',
             redirect: (_, state) => redirect(ref, state),
             pageBuilder: (context, state) => buildPageWithTransition(
-              DirectMessagePage(key: state.pageKey),
+              FollowingPage(key: const ValueKey('following')),
               state,
             ),
           ),

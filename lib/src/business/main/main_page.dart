@@ -204,10 +204,14 @@ class _MainPageState extends ConsumerState<MainPage> with WindowListener {
   }
 
   Widget _buildTitleHead(String? tag) {
-    return switch (tag) {
-      MainRoute.home => const HomePageHead(),
-      _ => const SizedBox.shrink(),
-    };
+    if (tag == null) return const SizedBox.shrink();
+    
+    // 首页及其子路由都显示 HomePageHead
+    if (tag == MainRoute.home || tag.startsWith('${MainRoute.home}/')) {
+      return const HomePageHead();
+    }
+    
+    return const SizedBox.shrink();
   }
 
   void _calculateTitleSearchPanelOffset() async {

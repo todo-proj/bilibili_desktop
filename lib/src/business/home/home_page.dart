@@ -1,6 +1,7 @@
 import 'package:bilibili_desktop/src/business/home/home_view_model.dart';
 import 'package:bilibili_desktop/src/business/home/recommend/home_recommend_page.dart';
-import 'package:bilibili_desktop/src/business/home/recommend/home_recommend_view_model.dart';
+import 'package:bilibili_desktop/src/business/home/hot/hot_page.dart';
+import 'package:bilibili_desktop/src/business/home/chase/chase_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,11 +29,11 @@ class _HomePageState extends ConsumerState<HomePage> {
     return IndexedStack(
       index: state.currentIndex,
       children: [
-        HomeRecommendPage(),
-        HomeRecommendPage(),
-        HomeRecommendPage(),
-        HomeRecommendPage(),
-        HomeRecommendPage(),
+        HomeRecommendPage(), // 直播
+        HomeRecommendPage(), // 推荐
+        const HotPage(), // 热门
+        const ChasePage(), // 追番
+        HomeRecommendPage(), // 影视
       ],
     );
   }

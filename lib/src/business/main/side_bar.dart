@@ -6,6 +6,7 @@ import 'package:bilibili_desktop/src/business/user/user_center.dart';
 import 'package:bilibili_desktop/src/config/window_config.dart';
 import 'package:bilibili_desktop/src/providers/router/main_route.dart';
 import 'package:bilibili_desktop/src/providers/router/root_route.dart';
+import 'package:bilibili_desktop/src/providers/router/router_history.dart';
 import 'package:bilibili_desktop/src/providers/theme/extension/app_color.dart';
 import 'package:bilibili_desktop/src/providers/theme/themes_provider.dart';
 import 'package:bilibili_desktop/src/utils/widget_util.dart';
@@ -14,7 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:window_manager/window_manager.dart';
 
 class SideBar extends ConsumerStatefulWidget {
   const SideBar({super.key});
@@ -32,7 +32,10 @@ class _SideBarState extends ConsumerState<SideBar> {
     final items = ref.watch(
       mainViewModelProvider.select((v) => v.sideBarItems),
     );
-
+    final hasHistory = ref.read(routerHistoryProvider).hasHistory;
+    final histories = ref.read(routerHistoryProvider).histories;
+    debugPrint('SideBar: $hasHistory');
+    debugPrint('SideBar: ${histories.length}');
     return Container(
       width: WindowConfig.sideBarWidth,
       color: Theme.of(context).appColor.sideBarBackground,
@@ -40,18 +43,22 @@ class _SideBarState extends ConsumerState<SideBar> {
         spacing: 10,
         children: [
           Platform.isMacOS ? 50.hSize : 30.hSize,
-          Container(
+          IconButton(onPressed: (){
+            if (context.canPop()) {
+              context.pop();
+            }
+          }, icon: Container(
             padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
+            decoration: hasHistory ? BoxDecoration(
               color: Theme.of(context).appColor.sideBarButtonBackground,
               borderRadius: BorderRadius.circular(6),
+            ) : null,
+            child: Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+          ), style: ButtonStyle(
+            foregroundColor: WidgetStateProperty.all(
+              Theme.of(context).colorScheme.onSurface,
             ),
-            child: GestureDetector(
-              onTap: () {
-
-              },
-                child: Icon(Icons.arrow_back_ios_new_rounded, size: 20)),
-          ),
+          ),),
           10.hSize,
           ...List.generate(items.length, (index) {
             return _buildItem(items[index]);
